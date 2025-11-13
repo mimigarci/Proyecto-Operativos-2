@@ -194,8 +194,6 @@ public class Lista {
             Object aux = current.value.getValue();
             if ((value instanceof PCB) && (aux instanceof PCB) && ((PCB)aux).getId() == ((PCB)value).getId()) {
                 return current.value.getIndex();
-            } else if ((value instanceof Device) && (aux instanceof Device) && ((Device)aux).getId() == ((Device)value).getId()){
-                return current.value.getIndex();
             } else if ((value instanceof Proceso) && (aux instanceof Proceso) && ((Proceso)aux).getPcb().getId() == ((Proceso)value).getPcb().getId()) {
                 return current.value.getIndex();
             } else if (aux == value || (aux != null && aux.equals(value))) {
