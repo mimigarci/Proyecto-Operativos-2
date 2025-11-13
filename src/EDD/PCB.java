@@ -12,19 +12,11 @@ public class PCB {
     private int id;
     private String status;
     private String name;
-    private int pc;
-    private int mar;
-    private int priority;
-    private int timesIn;
-    private float priorityFSS;
 
     public PCB(int id, String name) {
         this.id = id;
         this.status = "new";
         this.name = name;
-        this.pc = 0;
-        this.mar = 0;
-        this.timesIn = 0;
     }
 
     public String getStatus() {
@@ -34,47 +26,9 @@ public class PCB {
     public void setStatus(String status) {
         this.status = status;
     }
-
-    public int getPc() {
-        return pc;
-    }
-
-    public void setPc(int pc) {
-        this.pc = pc;
-    }
-
-    public int getMar() {
-        return mar;
-    }
-
-    public void setMar(int mar) {
-        this.mar = mar;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public int getTimesIn() {
-        return timesIn;
-    }
-
-    public void setTimesIn(int timesIn) {
-        this.timesIn = timesIn;
-    }
-
-    public float getPriorityFSS() {
-        return priorityFSS;
-    }
-
-    public void setPriorityFSS(float priorityFSS) {
-        this.priorityFSS = priorityFSS;
-    }
-        
+ 
     public void update(String status, int pc, int mar) {
         setStatus(status);
-        setPc(pc);
-        setMar(mar);
     }
 
     /**

@@ -11,22 +11,10 @@ package EDD;
 public class OS {
 
     private Lista processList = new Lista();
-    private Lista processTable = new Lista();
-    private Lista deviceTable = new Lista();
-    private int memorySpace = 4000;
     private Scheduler scheduler;
-    private Dispatcher dispatcher = new Dispatcher();
-    private int remainingSpace = memorySpace;
-    private Lista priorityList = new Lista();
-    private Lista feedbackList = new Lista();
     private Cola readyQueue = new Cola();
-    private Cola longTermQueue = new Cola();
     private Cola blockedQueue = new Cola();
-    private Cola suspendedReadyQueue = new Cola();
-    private Cola suspendedBlockedQueue = new Cola();
     private Lista terminatedProcessList = new Lista();
-    private int currentPlanification = 0;
-    private int quantum;
 
     
     
@@ -46,16 +34,7 @@ public class OS {
     }
 
     public OS(int memorySpace, int quantum) {
-        Device first = new Device(0);
-        Device second = new Device(1);
-        Device third = new Device(2);
-        
-        deviceTable.add(first);
-        deviceTable.add(second);
-        deviceTable.add(third);
-        
-        this.scheduler = new Scheduler(processList, memorySpace, deviceTable);
-        this.quantum = quantum;
+        this.scheduler = new Scheduler(processList);
         
     }
     
@@ -149,35 +128,7 @@ public class OS {
     public void setProcessList(Lista processList) {
         this.processList = processList;
     }
-
-    /**
-     * @return the processTable
-     */
-    public Lista getProcessTable() {
-        return processTable;
-    }
-
-    /**
-     * @param processTable the processTable to set
-     */
-    public void setProcessTable(Lista processTable) {
-        this.processTable = processTable;
-    }
-
-    /**
-     * @return the deviceTable
-     */
-    public Lista getDeviceTable() {
-        return deviceTable;
-    }
-
-    /**
-     * @param deviceTable the deviceTable to set
-     */
-    public void setDeviceTable(Lista deviceTable) {
-        this.deviceTable = deviceTable;
-    }
-
+    
     /**
      * @return the scheduler
      */
@@ -193,88 +144,15 @@ public class OS {
     }
 
     /**
-     * @return the dispatcher
-     */
-    public Dispatcher getDispatcher() {
-        return dispatcher;
-    }
-
-    /**
-     * @param dispatcher the dispatcher to set
-     */
-    public void setDispatcher(Dispatcher dispatcher) {
-        this.dispatcher = dispatcher;
-    }
-
-    /**
-     * @return the memorySpace
-     */
-    public int getMemorySpace() {
-        return memorySpace;
-    }
-
-    /**
-     * @param memorySpace the memorySpace to set
-     */
-    public void setMemorySpace(int memorySpace) {
-        this.memorySpace = memorySpace;
-    }
-
-    /**
-     * @return the priorityList
-     */
-    public Lista getPriorityList() {
-        return priorityList;
-    }
-
-    /**
-     * @param priorityList the priorityList to set
-     */
-    public void setPriorityList(Lista priorityList) {
-        this.priorityList = priorityList;
-    }
-
-    /**
-     * @return the feedbackList
-     */
-    public Lista getFeedbackList() {
-        return feedbackList;
-    }
-
-    /**
-     * @param feedbackList the feedbackList to set
-     */
-    public void setFeedbackList(Lista feedbackList) {
-        this.feedbackList = feedbackList;
-    }
-
-    /**
      * @return the readyQueue
      */
     public Cola getReadyQueue() {
         return readyQueue;
     }
 
-    public int getRemainingSpace() {
-        return remainingSpace;
-    }
-
-    public void setRemainingSpace(int remainingSpace) {
-        this.remainingSpace = remainingSpace;
-    }
-
     public void setReadyQueue(Cola readyQueue) {
         this.readyQueue = readyQueue;
     }
-
-    public Cola getLongTermQueue() {
-        return longTermQueue;
-    }
-
-    public void setLongTermQueue(Cola longTermQueue) {
-        this.longTermQueue = longTermQueue;
-    }
-
 
     public Cola getBlockedQueue() {
         return blockedQueue;
@@ -282,22 +160,6 @@ public class OS {
 
     public void setBlockedQueue(Cola blockedQueue) {
         this.blockedQueue = blockedQueue;
-    }
-
-    public Cola getSuspendedReadyQueue() {
-        return suspendedReadyQueue;
-    }
-
-    public void setSuspendedReadyQueue(Cola suspendedReadyQueue) {
-        this.suspendedReadyQueue = suspendedReadyQueue;
-    }
-
-    public Cola getSuspendedBlockedQueue() {
-        return suspendedBlockedQueue;
-    }
-
-    public void setSuspendedBlockedQueue(Cola suspendedBlockedQueue) {
-        this.suspendedBlockedQueue = suspendedBlockedQueue;
     }
 
     public Lista getTerminatedProcessList() {
@@ -308,26 +170,4 @@ public class OS {
         this.terminatedProcessList = terminatedProcessList;
     }
 
-    public int getCurrentPlanification() {
-        return currentPlanification;
-    }
-
-    public void setCurrentPlanification(int currentPlanification) {
-        this.currentPlanification = currentPlanification;
-    }
-        
-    /**
-     * @return the quantum
-     */
-    public int getQuantum() {
-        return quantum;
-    }
-
-    /**
-     * @param quantum the quantum to set
-     */
-    public void setQuantum(int quantum) {
-        this.quantum = quantum;
-    }
-    
 }

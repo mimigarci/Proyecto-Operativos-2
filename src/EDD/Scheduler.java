@@ -13,16 +13,10 @@ public class Scheduler {
     // Tomando que 1 ciclo de ejecución del CPU son 0.00001ms
     
     private Lista processList; //Lista en la cual se guardan todos los procesos a ejecutar.
-    private int memoryAvaiable;
-    private Lista deviceTable = new Lista();
-    private int remainingSpace = memoryAvaiable;
                                      //Se agregan desde la interfaz
 
-    public Scheduler(Lista processList, int memorySpace, Lista deviceTable) {
+    public Scheduler(Lista processList) {
         this.processList = processList;
-        this.memoryAvaiable = memorySpace;
-        this.deviceTable = deviceTable;
-        this.remainingSpace = memoryAvaiable;
     }
     
     
