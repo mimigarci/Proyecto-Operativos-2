@@ -42,11 +42,11 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
       <SubComponents>
-        <Container class="java.awt.Panel" name="sim_panel">
+        <Container class="java.awt.Panel" name="archive">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Simulaci&#xf3;n">
-                <Property name="tabTitle" type="java.lang.String" value="Simulaci&#xf3;n"/>
+              <JTabbedPaneConstraints tabName="Administrador de archivos">
+                <Property name="tabTitle" type="java.lang.String" value="Administrador de archivos"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -73,14 +73,14 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="177" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jLabel3" alignment="0" max="32767" attributes="0"/>
                           <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
                           <Component id="jLabel14" alignment="1" max="32767" attributes="0"/>
                           <Component id="jScrollPane9" alignment="1" min="-2" pref="793" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+                      <EmptySpace pref="44" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -234,7 +234,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="-2" pref="143" max="-2" attributes="0"/>
-                          <Component id="create_process" pref="105" max="32767" attributes="0"/>
+                          <Component id="create_process" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="130" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jLabel2" alignment="1" max="32767" attributes="0"/>
@@ -245,10 +245,7 @@
                               <Component id="label10" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="interrupt_handled" alignment="0" pref="87" max="32767" attributes="0"/>
-                              <Component id="process_type" alignment="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="process_type" min="-2" pref="87" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -264,11 +261,8 @@
                               <Component id="process_type" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="label10" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="interrupt_handled" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="15" max="32767" attributes="0"/>
+                          <Component id="label10" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="17" max="32767" attributes="0"/>
                           <Component id="create_process" min="-2" pref="24" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                       </Group>
@@ -306,8 +300,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Nombre del archivo"/>
                   </Properties>
-                </Component>
-                <Component class="javax.swing.JSpinner" name="interrupt_handled">
                 </Component>
                 <Component class="java.awt.Choice" name="process_type">
                   <Properties>
@@ -472,7 +464,7 @@
             </Container>
           </SubComponents>
         </Container>
-        <Container class="java.awt.Panel" name="sim_panel1">
+        <Container class="java.awt.Panel" name="memory_table">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Tabla de memoria">
@@ -485,7 +477,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="131" max="32767" attributes="0"/>
+                      <EmptySpace pref="76" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="global_clock2" min="-2" pref="82" max="-2" attributes="0"/>
@@ -1011,7 +1003,7 @@
                       <Component id="panel4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Component id="panel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="798" max="32767" attributes="0"/>
+                      <EmptySpace pref="741" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1181,7 +1173,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1421" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="1364" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

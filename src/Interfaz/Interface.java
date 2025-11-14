@@ -30,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTree;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -485,7 +486,7 @@ public class Interface extends javax.swing.JFrame {
     private void initComponents() {
 
         selection = new JTabbedPane();
-        sim_panel = new Panel();
+        archive = new Panel();
         panel1 = new Panel();
         jLabel6 = new JLabel();
         jScrollPane1 = new JScrollPane();
@@ -497,7 +498,6 @@ public class Interface extends javax.swing.JFrame {
         jLabel2 = new JLabel();
         label9 = new Label();
         label10 = new Label();
-        interrupt_handled = new JSpinner();
         process_type = new Choice();
         create_process = new JButton();
         jLabel3 = new JLabel();
@@ -511,7 +511,7 @@ public class Interface extends javax.swing.JFrame {
         global_clock1 = new JLabel();
         jScrollPane3 = new JScrollPane();
         jScrollPane9 = new JScrollPane();
-        sim_panel1 = new Panel();
+        memory_table = new Panel();
         panel6 = new Panel();
         jLabel7 = new JLabel();
         jScrollPane2 = new JScrollPane();
@@ -647,7 +647,7 @@ public class Interface extends javax.swing.JFrame {
         panel2Layout.setHorizontalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
                 .addGap(143, 143, 143)
-                .addComponent(create_process, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                .addComponent(create_process, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(130, 130, 130))
             .addComponent(jLabel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel2Layout.createSequentialGroup()
@@ -656,9 +656,7 @@ public class Interface extends javax.swing.JFrame {
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(interrupt_handled, GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                    .addComponent(process_type, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(process_type, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36))
         );
         panel2Layout.setVerticalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -670,10 +668,8 @@ public class Interface extends javax.swing.JFrame {
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(process_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(interrupt_handled, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
                 .addComponent(create_process, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
@@ -746,43 +742,43 @@ public class Interface extends javax.swing.JFrame {
         global_clock1.setFont(new Font("Segoe UI", 0, 24)); // NOI18N
         global_clock1.setText("segundos");
 
-        GroupLayout sim_panelLayout = new GroupLayout(sim_panel);
-        sim_panel.setLayout(sim_panelLayout);
-        sim_panelLayout.setHorizontalGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, sim_panelLayout.createSequentialGroup()
+        GroupLayout archiveLayout = new GroupLayout(archive);
+        archive.setLayout(archiveLayout);
+        archiveLayout.setHorizontalGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, archiveLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(sim_panelLayout.createSequentialGroup()
-                        .addGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addGroup(archiveLayout.createSequentialGroup()
+                        .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                             .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(sim_panelLayout.createSequentialGroup()
+                            .addGroup(archiveLayout.createSequentialGroup()
                                 .addComponent(global_clock, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(global_clock1, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(177, 177, 177)
-                .addGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                .addGap(116, 116, 116)
+                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane3)
                     .addComponent(jLabel14, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane9, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 793, GroupLayout.PREFERRED_SIZE))
-                .addGap(39, 39, 39))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
-        sim_panelLayout.setVerticalGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(sim_panelLayout.createSequentialGroup()
+        archiveLayout.setVerticalGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(archiveLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(sim_panelLayout.createSequentialGroup()
+                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(archiveLayout.createSequentialGroup()
                         .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(panel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(sim_panelLayout.createSequentialGroup()
+                    .addGroup(archiveLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
@@ -791,15 +787,15 @@ public class Interface extends javax.swing.JFrame {
                         .addGap(7, 7, 7)
                         .addComponent(jScrollPane9, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)))
                 .addGap(27, 27, 27)
-                .addGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(global_clock, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-                    .addGroup(sim_panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(global_clock1, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
                         .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(88, Short.MAX_VALUE))
         );
 
-        selection.addTab("Simulación", sim_panel);
+        selection.addTab("Administrador de archivos", archive);
 
         panel6.setBackground(new Color(201, 255, 238));
 
@@ -1038,13 +1034,13 @@ public class Interface extends javax.swing.JFrame {
         global_clock3.setFont(new Font("Segoe UI", 0, 24)); // NOI18N
         global_clock3.setText("segundos");
 
-        GroupLayout sim_panel1Layout = new GroupLayout(sim_panel1);
-        sim_panel1.setLayout(sim_panel1Layout);
-        sim_panel1Layout.setHorizontalGroup(sim_panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, sim_panel1Layout.createSequentialGroup()
-                .addContainerGap(131, Short.MAX_VALUE)
-                .addGroup(sim_panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(sim_panel1Layout.createSequentialGroup()
+        GroupLayout memory_tableLayout = new GroupLayout(memory_table);
+        memory_table.setLayout(memory_tableLayout);
+        memory_tableLayout.setHorizontalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, memory_tableLayout.createSequentialGroup()
+                .addContainerGap(76, Short.MAX_VALUE)
+                .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(memory_tableLayout.createSequentialGroup()
                         .addComponent(global_clock2, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(global_clock3, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
@@ -1052,39 +1048,39 @@ public class Interface extends javax.swing.JFrame {
                         .addComponent(generate_processes1, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE))
                     .addComponent(panel8, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(sim_panel1Layout.createSequentialGroup()
+                    .addGroup(memory_tableLayout.createSequentialGroup()
                         .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(112, 112, 112)
-                .addGroup(sim_panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel8, GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
                     .addComponent(jScrollPane4))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        sim_panel1Layout.setVerticalGroup(sim_panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(sim_panel1Layout.createSequentialGroup()
+        memory_tableLayout.setVerticalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(memory_tableLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(sim_panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addGroup(GroupLayout.Alignment.LEADING, sim_panel1Layout.createSequentialGroup()
+                .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addGroup(GroupLayout.Alignment.LEADING, memory_tableLayout.createSequentialGroup()
                         .addComponent(jLabel8)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane4, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(GroupLayout.Alignment.LEADING, sim_panel1Layout.createSequentialGroup()
+                    .addGroup(GroupLayout.Alignment.LEADING, memory_tableLayout.createSequentialGroup()
                         .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panel8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(sim_panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(global_clock2, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(sim_panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                 .addComponent(global_clock3, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
                                 .addComponent(generate_processes1, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        selection.addTab("Tabla de memoria", sim_panel1);
+        selection.addTab("Tabla de memoria", memory_table);
 
         panel4.setBackground(new Color(201, 255, 238));
 
@@ -1170,7 +1166,7 @@ public class Interface extends javax.swing.JFrame {
                 .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(798, Short.MAX_VALUE))
+                .addContainerGap(741, Short.MAX_VALUE))
         );
         config_panelLayout.setVerticalGroup(config_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(config_panelLayout.createSequentialGroup()
@@ -1186,7 +1182,7 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout graphics_panelLayout = new GroupLayout(graphics_panel);
         graphics_panel.setLayout(graphics_panelLayout);
         graphics_panelLayout.setHorizontalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 1421, Short.MAX_VALUE)
+            .addGap(0, 1364, Short.MAX_VALUE)
         );
         graphics_panelLayout.setVerticalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 678, Short.MAX_VALUE)
@@ -1204,18 +1200,6 @@ public class Interface extends javax.swing.JFrame {
         
     }//GEN-LAST:event_save_ciclesActionPerformed
 
-    private void create_process1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_create_process1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_create_process1ActionPerformed
-
-    private void generate_processes1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_generate_processes1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_generate_processes1ActionPerformed
-
-    private void save_policy1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_policy1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_save_policy1ActionPerformed
-
     private void create_processActionPerformed(ActionEvent evt) {//GEN-FIRST:event_create_processActionPerformed
         // create Process (use the correct text field for the name; set_process_name is the JTextField)
         
@@ -1232,6 +1216,18 @@ public class Interface extends javax.swing.JFrame {
         // TODO add your handling code here:
         //runQuickAddDemo();
     }//GEN-LAST:event_generate_processesActionPerformed
+
+    private void create_process1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_create_process1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_create_process1ActionPerformed
+
+    private void generate_processes1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_generate_processes1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_generate_processes1ActionPerformed
+
+    private void save_policy1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_policy1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_save_policy1ActionPerformed
 
     
     /**
@@ -1274,6 +1270,7 @@ public class Interface extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private Panel archive;
     private JSpinner cicles_duration;
     private Panel config_panel;
     private JButton create_process;
@@ -1287,7 +1284,6 @@ public class Interface extends javax.swing.JFrame {
     private JLabel global_clock3;
     private Panel graphics_panel;
     private JSpinner interrupt_cicle1;
-    private JSpinner interrupt_handled;
     private JSpinner interrupt_handled1;
     private JLabel jLabel10;
     private JLabel jLabel11;
@@ -1318,6 +1314,7 @@ public class Interface extends javax.swing.JFrame {
     private Label label19;
     private Label label7;
     private Label label9;
+    private Panel memory_table;
     private Panel panel1;
     private Panel panel2;
     private Panel panel3;
@@ -1341,8 +1338,6 @@ public class Interface extends javax.swing.JFrame {
     private JTextArea show_actual1;
     private JTextArea show_terminated;
     private JTextArea show_terminated1;
-    private Panel sim_panel;
-    private Panel sim_panel1;
     // End of variables declaration//GEN-END:variables
 
 }
