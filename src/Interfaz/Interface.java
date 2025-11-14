@@ -29,13 +29,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -500,6 +503,9 @@ public class Interface extends javax.swing.JFrame {
         label10 = new Label();
         process_type = new Choice();
         create_process = new JButton();
+        file_name = new JTextField();
+        file_name1 = new JTextField();
+        label11 = new Label();
         jLabel3 = new JLabel();
         jLabel14 = new JLabel();
         panel3 = new Panel();
@@ -515,42 +521,12 @@ public class Interface extends javax.swing.JFrame {
         jScrollPane5 = new JScrollPane();
         jTree1 = new JTree();
         memory_table = new Panel();
-        panel6 = new Panel();
-        jLabel7 = new JLabel();
-        jScrollPane2 = new JScrollPane();
-        show_terminated1 = new JTextArea();
-        jLabel12 = new JLabel();
-        jScrollPane7 = new JScrollPane();
-        show_actual1 = new JTextArea();
         panel7 = new Panel();
-        jLabel4 = new JLabel();
-        label7 = new Label();
-        label13 = new Label();
-        label15 = new Label();
-        interrupt_handled1 = new JSpinner();
-        process_type2 = new Choice();
-        create_process1 = new JButton();
-        label17 = new Label();
-        label18 = new Label();
-        interrupt_cicle1 = new JSpinner();
-        label19 = new Label();
-        process_device1 = new Choice();
-        set_process_priority1 = new JSpinner();
-        process_type3 = new Choice();
-        jLabel8 = new JLabel();
-        panel8 = new Panel();
-        jLabel13 = new JLabel();
-        planification_choose1 = new Choice();
-        save_policy1 = new JButton();
-        global_clock2 = new JLabel();
-        generate_processes1 = new JButton();
-        global_clock3 = new JLabel();
-        jScrollPane4 = new JScrollPane();
+        jScrollPane2 = new JScrollPane();
+        jTable1 = new JTable();
         config_panel = new Panel();
         panel4 = new Panel();
         jLabel9 = new JLabel();
-        cicles_duration = new JSpinner();
-        label12 = new Label();
         save_cicles = new JButton();
         panel5 = new Panel();
         jLabel10 = new JLabel();
@@ -645,34 +621,63 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
+        file_name.setText("jTextField1");
+        file_name.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                file_nameActionPerformed(evt);
+            }
+        });
+
+        file_name1.setText("jTextField1");
+        file_name1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                file_name1ActionPerformed(evt);
+            }
+        });
+
+        label11.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
+        label11.setForeground(new Color(51, 51, 51));
+        label11.setText("Nombre del directorio");
+
         GroupLayout panel2Layout = new GroupLayout(panel2);
         panel2.setLayout(panel2Layout);
         panel2Layout.setHorizontalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
                 .addGap(143, 143, 143)
-                .addComponent(create_process, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(create_process, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
                 .addGap(130, 130, 130))
             .addComponent(jLabel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel2Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(process_type, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE)
+                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(file_name1, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                    .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                        .addComponent(process_type, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(36, 36, 36))
         );
         panel2Layout.setVerticalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel2Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel2)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(process_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(file_name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(file_name1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(create_process, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
@@ -825,287 +830,49 @@ public class Interface extends javax.swing.JFrame {
 
         selection.addTab("Administrador de archivos", archive);
 
-        panel6.setBackground(new Color(201, 255, 238));
-
-        jLabel7.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
-        jLabel7.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel7.setText("Procesos terminados");
-
-        show_terminated1.setEditable(false);
-        show_terminated1.setColumns(20);
-        show_terminated1.setRows(5);
-        jScrollPane2.setViewportView(show_terminated1);
-
-        jLabel12.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
-        jLabel12.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel12.setText("Proceso actual");
-
-        show_actual1.setEditable(false);
-        show_actual1.setColumns(20);
-        show_actual1.setRows(5);
-        jScrollPane7.setViewportView(show_actual1);
-
-        GroupLayout panel6Layout = new GroupLayout(panel6);
-        panel6.setLayout(panel6Layout);
-        panel6Layout.setHorizontalGroup(panel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, panel6Layout.createSequentialGroup()
-                .addGroup(panel6Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel6Layout.createSequentialGroup()
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(GroupLayout.Alignment.LEADING, panel6Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel12, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(GroupLayout.Alignment.LEADING, panel6Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane7, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        panel6Layout.setVerticalGroup(panel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(panel6Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel12)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane7, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
-        );
-
         panel7.setBackground(new Color(201, 255, 238));
 
-        jLabel4.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
-        jLabel4.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel4.setText("Crear Archivo");
-
-        label7.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
-        label7.setForeground(new Color(51, 51, 51));
-        label7.setText("Accion a ejecutar");
-
-        label13.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
-        label13.setForeground(new Color(51, 51, 51));
-        label13.setText("Privacidad");
-
-        label15.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
-        label15.setForeground(new Color(51, 51, 51));
-        label15.setText("Archivo");
-
-        process_type2.setForeground(new Color(51, 51, 51));
-
-        create_process1.setBackground(new Color(72, 149, 125));
-        create_process1.setForeground(new Color(255, 255, 255));
-        create_process1.setText("  Crear Proceso  ");
-        create_process1.setBorder(null);
-        create_process1.setBorderPainted(false);
-        create_process1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                create_process1ActionPerformed(evt);
+        jTable1.setModel(new DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
             }
-        });
-
-        label17.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
-        label17.setForeground(new Color(51, 51, 51));
-        label17.setText("Prioridad");
-
-        label18.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
-        label18.setForeground(new Color(51, 51, 51));
-        label18.setText("Ciclo donde se interrumpe");
-
-        label19.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
-        label19.setForeground(new Color(51, 51, 51));
-        label19.setText("Dispositivo");
-
-        process_device1.setForeground(new Color(51, 51, 51));
-
-        process_type3.setForeground(new Color(51, 51, 51));
+        ));
+        jScrollPane2.setViewportView(jTable1);
 
         GroupLayout panel7Layout = new GroupLayout(panel7);
         panel7.setLayout(panel7Layout);
         panel7Layout.setHorizontalGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                .addGap(143, 143, 143)
-                .addComponent(create_process1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(130, 130, 130))
-            .addComponent(jLabel4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel7Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(panel7Layout.createSequentialGroup()
-                        .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label15, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label17, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(panel7Layout.createSequentialGroup()
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(interrupt_handled1, GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                                    .addComponent(process_type2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(process_type3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(panel7Layout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addComponent(set_process_priority1))))
-                    .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                        .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(label18, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label19, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(process_device1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(interrupt_cicle1, GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))))
-                .addGap(36, 36, 36))
-        );
-        panel7Layout.setVerticalGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(panel7Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel4)
-                .addGap(22, 22, 22)
-                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(process_type3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(process_type2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(label15, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(interrupt_handled1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(panel7Layout.createSequentialGroup()
-                        .addComponent(label17, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12))
-                    .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                        .addComponent(set_process_priority1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(label18, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(interrupt_cicle1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(label19, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(process_device1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(create_process1, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20))
-        );
-
-        jLabel8.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
-        jLabel8.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel8.setText("Cola de Procesos");
-
-        panel8.setBackground(new Color(201, 255, 238));
-
-        jLabel13.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
-        jLabel13.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel13.setText("Cambiar politica de planificación del disco");
-
-        planification_choose1.setForeground(new Color(51, 51, 51));
-
-        save_policy1.setBackground(new Color(72, 149, 125));
-        save_policy1.setForeground(new Color(255, 255, 255));
-        save_policy1.setText("Guardar Cambios");
-        save_policy1.setBorder(null);
-        save_policy1.setBorderPainted(false);
-        save_policy1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                save_policy1ActionPerformed(evt);
-            }
-        });
-
-        GroupLayout panel8Layout = new GroupLayout(panel8);
-        panel8.setLayout(panel8Layout);
-        panel8Layout.setHorizontalGroup(panel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel13, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panel8Layout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(save_policy1, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(GroupLayout.Alignment.TRAILING, panel8Layout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(planification_choose1, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
-        );
-        panel8Layout.setVerticalGroup(panel8Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(panel8Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel13)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(planification_choose1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(save_policy1, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                .addGap(15, 15, 15)
+                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 477, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(22, Short.MAX_VALUE))
         );
-
-        global_clock2.setFont(new Font("Segoe UI", 0, 48)); // NOI18N
-        global_clock2.setText("100");
-
-        generate_processes1.setBackground(new Color(72, 149, 125));
-        generate_processes1.setForeground(new Color(255, 255, 255));
-        generate_processes1.setText("  Crear 20 procesos  ");
-        generate_processes1.setBorder(null);
-        generate_processes1.setBorderPainted(false);
-        generate_processes1.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                generate_processes1ActionPerformed(evt);
-            }
-        });
-
-        global_clock3.setFont(new Font("Segoe UI", 0, 24)); // NOI18N
-        global_clock3.setText("segundos");
+        panel7Layout.setVerticalGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addGap(14, 14, 14))
+        );
 
         GroupLayout memory_tableLayout = new GroupLayout(memory_table);
         memory_table.setLayout(memory_tableLayout);
         memory_tableLayout.setHorizontalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, memory_tableLayout.createSequentialGroup()
-                .addContainerGap(131, Short.MAX_VALUE)
-                .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(memory_tableLayout.createSequentialGroup()
-                        .addComponent(global_clock2, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(global_clock3, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(generate_processes1, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panel8, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(memory_tableLayout.createSequentialGroup()
-                        .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(112, 112, 112)
-                .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel8, GroupLayout.DEFAULT_SIZE, 793, Short.MAX_VALUE)
-                    .addComponent(jScrollPane4))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(memory_tableLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(884, Short.MAX_VALUE))
         );
         memory_tableLayout.setVerticalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(memory_tableLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addGroup(GroupLayout.Alignment.LEADING, memory_tableLayout.createSequentialGroup()
-                        .addComponent(jLabel8)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(GroupLayout.Alignment.LEADING, memory_tableLayout.createSequentialGroup()
-                        .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panel8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(global_clock2, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(global_clock3, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(generate_processes1, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(202, Short.MAX_VALUE))
         );
 
         selection.addTab("Tabla de memoria", memory_table);
@@ -1114,11 +881,7 @@ public class Interface extends javax.swing.JFrame {
 
         jLabel9.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
         jLabel9.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel9.setText("Duración de ciclos de ejecución");
-
-        label12.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
-        label12.setForeground(new Color(51, 51, 51));
-        label12.setText("segundos");
+        jLabel9.setText("Modo de ejecución");
 
         save_cicles.setBackground(new Color(72, 149, 125));
         save_cicles.setForeground(new Color(255, 255, 255));
@@ -1136,28 +899,17 @@ public class Interface extends javax.swing.JFrame {
         panel4Layout.setHorizontalGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(jLabel9, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
-                .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
-                        .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            .addComponent(label12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cicles_duration, GroupLayout.PREFERRED_SIZE, 271, GroupLayout.PREFERRED_SIZE))
-                        .addGap(36, 36, 36))
-                    .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
-                        .addComponent(save_cicles)
-                        .addGap(111, 111, 111))))
+                .addContainerGap(115, Short.MAX_VALUE)
+                .addComponent(save_cicles)
+                .addGap(110, 110, 110))
         );
         panel4Layout.setVerticalGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel4Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel9)
-                .addGap(22, 22, 22)
-                .addComponent(cicles_duration, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(label12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addGap(62, 62, 62)
                 .addComponent(save_cicles, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         panel5.setBackground(new Color(93, 154, 135));
@@ -1200,9 +952,9 @@ public class Interface extends javax.swing.JFrame {
             .addGroup(config_panelLayout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(config_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(462, Short.MAX_VALUE))
+                    .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(506, Short.MAX_VALUE))
         );
 
         selection.addTab("Configuración", config_panel);
@@ -1245,17 +997,13 @@ public class Interface extends javax.swing.JFrame {
         //runQuickAddDemo();
     }//GEN-LAST:event_generate_processesActionPerformed
 
-    private void create_process1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_create_process1ActionPerformed
+    private void file_nameActionPerformed(ActionEvent evt) {//GEN-FIRST:event_file_nameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_create_process1ActionPerformed
+    }//GEN-LAST:event_file_nameActionPerformed
 
-    private void generate_processes1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_generate_processes1ActionPerformed
+    private void file_name1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_file_name1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_generate_processes1ActionPerformed
-
-    private void save_policy1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_policy1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_save_policy1ActionPerformed
+    }//GEN-LAST:event_file_name1ActionPerformed
 
     
     /**
@@ -1299,50 +1047,33 @@ public class Interface extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Panel archive;
-    private JSpinner cicles_duration;
     private Panel config_panel;
     private JButton create_process;
-    private JButton create_process1;
     private Label execution_mode;
+    private JTextField file_name;
+    private JTextField file_name1;
     private JButton generate_processes;
-    private JButton generate_processes1;
     private JLabel global_clock;
     private JLabel global_clock1;
-    private JLabel global_clock2;
-    private JLabel global_clock3;
     private Panel graphics_panel;
-    private JSpinner interrupt_cicle1;
-    private JSpinner interrupt_handled1;
     private JLabel jLabel10;
     private JLabel jLabel11;
-    private JLabel jLabel12;
-    private JLabel jLabel13;
     private JLabel jLabel14;
     private JLabel jLabel2;
     private JLabel jLabel3;
-    private JLabel jLabel4;
     private JLabel jLabel5;
     private JLabel jLabel6;
-    private JLabel jLabel7;
-    private JLabel jLabel8;
     private JLabel jLabel9;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
-    private JScrollPane jScrollPane4;
     private JScrollPane jScrollPane5;
     private JScrollPane jScrollPane6;
-    private JScrollPane jScrollPane7;
     private JScrollPane jScrollPane9;
+    private JTable jTable1;
     private JTree jTree1;
     private Label label10;
-    private Label label12;
-    private Label label13;
-    private Label label15;
-    private Label label17;
-    private Label label18;
-    private Label label19;
-    private Label label7;
+    private Label label11;
     private Label label9;
     private Panel memory_table;
     private Panel panel1;
@@ -1350,25 +1081,15 @@ public class Interface extends javax.swing.JFrame {
     private Panel panel3;
     private Panel panel4;
     private Panel panel5;
-    private Panel panel6;
     private Panel panel7;
-    private Panel panel8;
     private Panel panel9;
     private Choice planification_choose;
-    private Choice planification_choose1;
-    private Choice process_device1;
     private Choice process_type;
-    private Choice process_type2;
-    private Choice process_type3;
     private JButton save_cicles;
     private JButton save_policy;
-    private JButton save_policy1;
     private JTabbedPane selection;
-    private JSpinner set_process_priority1;
     private JTextArea show_actual;
-    private JTextArea show_actual1;
     private JTextArea show_terminated;
-    private JTextArea show_terminated1;
     // End of variables declaration//GEN-END:variables
 
 }
