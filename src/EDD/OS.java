@@ -38,6 +38,7 @@ public class OS {
         
     }
     
+    /*
     
     public boolean canBeReady(Proceso process){
         // compute potential remaining space without mutating state

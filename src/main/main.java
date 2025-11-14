@@ -4,6 +4,8 @@
  */
 package main;
 
+import Interfaz.Interface;
+
 /**
  *
  * @author miche_ysmoa6e
@@ -14,7 +16,8 @@ public class main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        Interface menu = new Interface();
+        menu.setVisible(true);
     }
     
 }
