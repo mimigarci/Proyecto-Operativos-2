@@ -15,7 +15,7 @@ public class Disk {
     private int headerPosition;
     private int direction;
     private int planification;
-    private Lista requests;
+    private Cola requests;
 
     public Disk() {
         this.spaces = new Object[64];
@@ -24,7 +24,7 @@ public class Disk {
         this.headerPosition = 0;
         this.direction = 0;
         this.planification = 0;
-        this.requests = new Lista();
+        this.requests = new Cola();
     }
 
     public Object[] getSpaces() {
@@ -75,12 +75,45 @@ public class Disk {
         this.planification = planification;
     }
 
-    public Lista getRequests() {
+    public Cola getRequests() {
         return requests;
     }
 
-    public void setRequests(Lista requests) {
+    public void setRequests(Cola requests) {
         this.requests = requests;
     }    
     
+    public void getClosest() {
+        
+    }
+    
+    public int getClosestScan(){
+        int i = 0;
+        int closest = 100;
+        int current;
+        Request closestRequest = new Request(10000, 10000, 10000);
+        Request currentRequest;
+        while (i < getRequests().getCount()) {
+            if (getDirection() == 1) {
+                if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
+                    current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
+                    currentRequest = (Request) getRequests().get(i);
+                    if (current < closest){
+                        closest = current;
+                        closestRequest = currentRequest;
+                    }
+                }
+            } else {
+                if (getHeaderPosition() > ((Request) getRequests().get(i)).getFileAdd()){
+                    current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
+                    currentRequest = (Request) getRequests().get(i);
+                    if (current < closest){
+                        closest = current;
+                        closestRequest = currentRequest;
+                    }
+                }
+            }
+        }
+        return closestRequest.getFileId();
+    }       
 }
