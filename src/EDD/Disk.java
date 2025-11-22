@@ -16,6 +16,7 @@ public class Disk {
     private int direction;
     private int planification;
     private Cola requests;
+    private Directory root;
 
     public Disk() {
         this.spaces = new Object[64];
@@ -25,6 +26,7 @@ public class Disk {
         this.direction = 0;
         this.planification = 0;
         this.requests = new Cola();
+        this.root = new Directory(0, new Lista());
     }
 
     public Object[] getSpaces() {
