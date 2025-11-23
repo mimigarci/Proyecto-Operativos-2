@@ -5,7 +5,7 @@
 package Interfaz;
 
 import EDD.Cola;
-import EDD.Lista;
+import EDD.Disk;
 import EDD.PCB;
 import EDD.Proceso;
 import EDD.OS;
@@ -25,9 +25,9 @@ import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -35,7 +35,6 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
@@ -51,7 +50,9 @@ public class Interface extends javax.swing.JFrame {
     private int planification;
     private boolean isSchedulerActive = false;
     private Thread schedulerThread;
-    int time;
+    private Disk disk;
+    private int actual_mode = 0; //0 ---> administrador, 1 ---> usuario
+    
    // private Lista devices = operativeSystem.getDeviceTable();    //---> No creo que sea necesario, se accede directamente a lo que está dentro del sistema operativo
    // private Lista processList = operativeSystem.getProcessList();
     private int prevTerminatedCount = 0;
@@ -66,7 +67,7 @@ public class Interface extends javax.swing.JFrame {
      */
     public Interface() {
         initComponents();
-  
+        setupScrollContainers();
     }
     
     
@@ -90,15 +91,18 @@ public class Interface extends javax.swing.JFrame {
             jScrollPane9.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         }
         
-        process_type.add("I/O Bound");
-        process_type.add("CPU Bound");
+        crud_selection.add("Crear");
+        crud_selection.add("Actualizar");
+        crud_selection.add("Eliminar");
         
-        planification_choose.add("Round Robin"); //0
-        planification_choose.add("Priority Planification"); //1
-        planification_choose.add("SPN"); //2
-        planification_choose.add("Feedback"); //3
-        planification_choose.add("FSS"); //4
-        planification_choose.add("SRT"); //5
+        execution_mode_select.add("Modo usuario");
+        execution_mode_select.add("Modo administrador");
+        
+        planification_choose.add("FIFO"); //0
+        planification_choose.add("SCAN"); //1
+        planification_choose.add("C-SCAN"); //2
+        planification_choose.add("SSTF"); //3
+        
         
     }
     
@@ -275,88 +279,10 @@ public class Interface extends javax.swing.JFrame {
     }
     
     
-    /*
-    
-    public void addProcessToSystem(Proceso process){
-    
-        if (operativeSystem.canBeReady(process) == true){
-            operativeSystem.getReadyQueue().enqueue(process.getPcb());
-        } else {
-            operativeSystem.getLongTermQueue().enqueue(process.getPcb());
-        }
-        
-        Lista aux = operativeSystem.getProcessList();
-        aux.add(process);
-        
-        operativeSystem.setProcessList(aux);
-        /*
-        System.out.println(operativeSystem.getReadyQueue().getCount());
-        System.out.println(operativeSystem.getSuspendedReadyQueue().getCount());
-        }
-    
-    public void runQuickAddDemo() {
-    // Make sure called on EDT
-    javax.swing.SwingUtilities.invokeLater(() -> {
-        // create test Proceso objects using the same constructor you already used in create_processActionPerformed
-        // Adjust arguments to match your Proceso constructor if needed
-        // public Proceso(int id, String name, String bound, int instructions, int ioCicles, int satisfyCicles, int deviceToUse, int priority) {
-        
-        Proceso p1 = new Proceso(getId(), "Proceso "+getId(), "I/O Bound", 10, 0, 0, 1,1);   // expected Ready
-        addProcessToSystem(p1);
-        
-        Proceso p2 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 20, 0, 0, 1,1); // expected Blocked
-        addProcessToSystem(p2);
-        
-        Proceso p3 = new Proceso(getId(), "Proceso "+getId(), "I/O Bound", 15, 0, 0, 2,1); // expected Suspended
-        addProcessToSystem(p3);
-        
-        Proceso p4 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 30, 0, 0, 3,1); // expected Suspended Blocked
-        addProcessToSystem(p4);
-        
-        Proceso p5 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 10, 0, 0, 1,2); // expected Suspended Blocked
-        addProcessToSystem(p5);
-        
-        Proceso p6 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 20, 0, 0, 2,2); // expected Suspended Blocked
-        addProcessToSystem(p6);
-        
-        Proceso p7 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 30, 0, 0, 3,2); // expected Suspended Blocked
-        addProcessToSystem(p7);
-        
-        Proceso p8 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 40, 0, 0, 1,2); // expected Suspended Blocked
-        addProcessToSystem(p8);
-        
-        Proceso p9 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 10, 0, 0, 2,3); // expected Suspended Blocked
-        addProcessToSystem(p9);
-        
-        Proceso p10 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 20, 0, 0, 3,3); // expected Suspended Blocked
-        addProcessToSystem(p10);
-        
-        Proceso p11 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 30, 0, 0, 1,3); // expected Suspended Blocked
-        addProcessToSystem(p11);
-        
-        Proceso p12 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 40, 0, 0, 2,3); // expected Suspended Blocked
-        addProcessToSystem(p12);
-        
-        Proceso p13 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 10, 0, 0, 3,4); // expected Suspended Blocked
-        addProcessToSystem(p13);
-        
-        Proceso p14 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 20, 0, 0, 1,4); // expected Suspended Blocked
-        addProcessToSystem(p14);
-        
-        Proceso p15 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 30, 0, 0, 2,4); // expected Suspended Blocked
-        addProcessToSystem(p15);
-        
-        Proceso p16 = new Proceso(getId(), "Proceso "+getId(), "CPU Bound", 40, 0, 0, 3,4); // expected Suspended Blocked
-        addProcessToSystem(p16);
-
-    });
-
-    }*/
-    
     public int getReadyContainerCount()       { return readyContainer == null ? 0 : readyContainer.getComponentCount(); }
     public int getBlockedContainerCount()     { return blockedContainer == null ? 0 : blockedContainer.getComponentCount(); }
     
-    /*
+    
     private void updateTerminatedArea() {
         
         if (show_terminated == null) return; // defensive
@@ -372,14 +298,14 @@ public class Interface extends javax.swing.JFrame {
         
         updateActualProcess();
     }
-    */
+    
     
     /**
     * Update the terminated-processes text area from the OS terminated list.
     * This runs on the EDT because javax.swing.Timer events are delivered on the EDT.
     */
     
-    /*
+    
     private void updateActualProcess() {
         if (show_actual == null) return;
 
@@ -387,7 +313,7 @@ public class Interface extends javax.swing.JFrame {
         try {
             synchronized (operativeSystem) {
                 if (operativeSystem != null && operativeSystem.getProcessList().count() > 0) {
-                    Proceso active = operativeSystem.getDispatcher().getActiveProcess(operativeSystem.getProcessList());
+                    Proceso active = operativeSystem.getActiveProcess();
                     if (active != null && active.getPcb() != null) {
                         PCB pcb = active.getPcb();
                         String name = pcb.getName();
@@ -406,10 +332,11 @@ public class Interface extends javax.swing.JFrame {
         show_actual.revalidate();
         show_actual.repaint();
     }
-*/
+
     
-    /*
+    
     private void startSchedulerBackground() {
+        /*
         int selected = planification; // read atomic/volatile if planification can change concurrently
         //System.out.println(selected);
         if (operativeSystem.getReadyQueue().getCount() > 0) {
@@ -424,18 +351,17 @@ public class Interface extends javax.swing.JFrame {
                 case 4 -> operativeSystem.executeFSS();
                 case 5 -> operativeSystem.executeSRT();
             }
+        }
+        */
+        // only after scheduler finishes, post minimal UI updates to EDT:
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            // refresh all relevant lists with the correct queues
+            refreshReadyList(operativeSystem.getReadyQueue());
+            refreshBlockedList(operativeSystem.getBlockedQueue());
+            updateActualProcess();
+            updateTerminatedArea();
+        });
     }
-    // only after scheduler finishes, post minimal UI updates to EDT:
-    javax.swing.SwingUtilities.invokeLater(() -> {
-        // refresh all relevant lists with the correct queues
-        refreshReadyList(operativeSystem.getReadyQueue());
-        refreshBlockedList(operativeSystem.getBlockedQueue());
-        refreshSuspendedReadyList(operativeSystem.getSuspendedReadyQueue());
-        refreshSuspendedBlockedList(operativeSystem.getSuspendedBlockedQueue());
-        updateActualProcess();
-        updateTerminatedArea();
-    });
-}
     
     private void startSchedulerThread() {
         
@@ -463,7 +389,6 @@ public class Interface extends javax.swing.JFrame {
         isSchedulerActive = true;
     }
 
-    */
     
     @Override
     public void dispose() {
@@ -477,6 +402,10 @@ public class Interface extends javax.swing.JFrame {
             }
         }
         super.dispose();
+    }
+    
+    public void updateTree(){
+    
     }
     
     /**
@@ -501,10 +430,10 @@ public class Interface extends javax.swing.JFrame {
         jLabel2 = new JLabel();
         label9 = new Label();
         label10 = new Label();
-        process_type = new Choice();
-        create_process = new JButton();
+        crud_selection = new Choice();
+        execute_crud = new JButton();
         file_name = new JTextField();
-        file_name1 = new JTextField();
+        file_directory = new JTextField();
         label11 = new Label();
         jLabel3 = new JLabel();
         jLabel14 = new JLabel();
@@ -512,13 +441,10 @@ public class Interface extends javax.swing.JFrame {
         jLabel5 = new JLabel();
         planification_choose = new Choice();
         save_policy = new JButton();
-        global_clock = new JLabel();
         generate_processes = new JButton();
-        global_clock1 = new JLabel();
         jScrollPane3 = new JScrollPane();
         jScrollPane9 = new JScrollPane();
         panel9 = new Panel();
-        jScrollPane5 = new JScrollPane();
         jTree1 = new JTree();
         memory_table = new Panel();
         panel7 = new Panel();
@@ -527,7 +453,8 @@ public class Interface extends javax.swing.JFrame {
         config_panel = new Panel();
         panel4 = new Panel();
         jLabel9 = new JLabel();
-        save_cicles = new JButton();
+        save_mode = new JButton();
+        execution_mode_select = new Choice();
         panel5 = new Panel();
         jLabel10 = new JLabel();
         execution_mode = new Label();
@@ -564,22 +491,14 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout panel1Layout = new GroupLayout(panel1);
         panel1.setLayout(panel1Layout);
         panel1Layout.setHorizontalGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panel1Layout.createSequentialGroup()
-                        .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel11, GroupLayout.PREFERRED_SIZE, 365, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jScrollPane6, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+            .addComponent(jLabel11, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel6, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panel1Layout.createSequentialGroup()
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane6, GroupLayout.PREFERRED_SIZE, 306, GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panel1Layout.setVerticalGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel1Layout.createSequentialGroup()
@@ -608,30 +527,28 @@ public class Interface extends javax.swing.JFrame {
         label10.setForeground(new Color(51, 51, 51));
         label10.setText("Nombre del archivo");
 
-        process_type.setForeground(new Color(51, 51, 51));
+        crud_selection.setForeground(new Color(51, 51, 51));
 
-        create_process.setBackground(new Color(72, 149, 125));
-        create_process.setForeground(new Color(255, 255, 255));
-        create_process.setText("    Ejecutar    ");
-        create_process.setBorder(null);
-        create_process.setBorderPainted(false);
-        create_process.addActionListener(new ActionListener() {
+        execute_crud.setBackground(new Color(72, 149, 125));
+        execute_crud.setForeground(new Color(255, 255, 255));
+        execute_crud.setText("    Ejecutar    ");
+        execute_crud.setBorder(null);
+        execute_crud.setBorderPainted(false);
+        execute_crud.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                create_processActionPerformed(evt);
+                execute_crudActionPerformed(evt);
             }
         });
 
-        file_name.setText("jTextField1");
         file_name.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 file_nameActionPerformed(evt);
             }
         });
 
-        file_name1.setText("jTextField1");
-        file_name1.addActionListener(new ActionListener() {
+        file_directory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                file_name1ActionPerformed(evt);
+                file_directoryActionPerformed(evt);
             }
         });
 
@@ -644,7 +561,7 @@ public class Interface extends javax.swing.JFrame {
         panel2Layout.setHorizontalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
                 .addGap(143, 143, 143)
-                .addComponent(create_process, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addComponent(execute_crud, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                 .addGap(130, 130, 130))
             .addComponent(jLabel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel2Layout.createSequentialGroup()
@@ -655,10 +572,9 @@ public class Interface extends javax.swing.JFrame {
                     .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(file_name1, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                    .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                        .addComponent(process_type, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(file_directory, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                    .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                    .addComponent(crud_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(36, 36, 36))
         );
         panel2Layout.setVerticalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -668,7 +584,7 @@ public class Interface extends javax.swing.JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(process_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(crud_selection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -676,9 +592,9 @@ public class Interface extends javax.swing.JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(file_name1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(file_directory, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(create_process, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                .addComponent(execute_crud, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
 
@@ -712,7 +628,7 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout panel3Layout = new GroupLayout(panel3);
         panel3.setLayout(panel3Layout);
         panel3Layout.setHorizontalGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
             .addGroup(panel3Layout.createSequentialGroup()
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(save_policy, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
@@ -720,7 +636,7 @@ public class Interface extends javax.swing.JFrame {
             .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(planification_choose, GroupLayout.PREFERRED_SIZE, 273, GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
+                .addGap(68, 68, 68))
         );
         panel3Layout.setVerticalGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel3Layout.createSequentialGroup()
@@ -733,9 +649,6 @@ public class Interface extends javax.swing.JFrame {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        global_clock.setFont(new Font("Segoe UI", 0, 48)); // NOI18N
-        global_clock.setText("100");
-
         generate_processes.setBackground(new Color(72, 149, 125));
         generate_processes.setForeground(new Color(255, 255, 255));
         generate_processes.setText("  Crear 10 archivos");
@@ -747,49 +660,42 @@ public class Interface extends javax.swing.JFrame {
             }
         });
 
-        global_clock1.setFont(new Font("Segoe UI", 0, 24)); // NOI18N
-        global_clock1.setText("segundos");
-
         panel9.setBackground(new Color(201, 255, 238));
-
-        jScrollPane5.setViewportView(jTree1);
 
         GroupLayout panel9Layout = new GroupLayout(panel9);
         panel9.setLayout(panel9Layout);
         panel9Layout.setHorizontalGroup(panel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 793, Short.MAX_VALUE)
             .addGroup(panel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(GroupLayout.Alignment.TRAILING, panel9Layout.createSequentialGroup()
-                    .addContainerGap(14, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5, GroupLayout.PREFERRED_SIZE, 773, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+                .addGroup(panel9Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jTree1, GroupLayout.PREFERRED_SIZE, 771, GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         panel9Layout.setVerticalGroup(panel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGap(0, 263, Short.MAX_VALUE)
             .addGroup(panel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(GroupLayout.Alignment.TRAILING, panel9Layout.createSequentialGroup()
-                    .addContainerGap(12, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5, GroupLayout.PREFERRED_SIZE, 238, GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(13, Short.MAX_VALUE)))
+                .addGroup(panel9Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jTree1, GroupLayout.PREFERRED_SIZE, 236, GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         GroupLayout archiveLayout = new GroupLayout(archive);
         archive.setLayout(archiveLayout);
         archiveLayout.setHorizontalGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, archiveLayout.createSequentialGroup()
-                .addGap(60, 60, 60)
+                .addGap(50, 50, 50)
                 .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(archiveLayout.createSequentialGroup()
-                        .addComponent(global_clock, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(global_clock1, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
+                        .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(panel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(90, 90, 90))
+                    .addGroup(archiveLayout.createSequentialGroup()
                         .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 29, Short.MAX_VALUE))
-                    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(90, 90, 90)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -804,27 +710,24 @@ public class Interface extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(archiveLayout.createSequentialGroup()
-                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(panel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(global_clock, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-                            .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                .addComponent(global_clock1, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)
-                                .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(archiveLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel14)
                         .addGap(7, 7, 7)
-                        .addComponent(jScrollPane9, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane9, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(archiveLayout.createSequentialGroup()
+                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(panel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
+                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(archiveLayout.createSequentialGroup()
+                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39)
+                        .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
@@ -883,16 +786,18 @@ public class Interface extends javax.swing.JFrame {
         jLabel9.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel9.setText("Modo de ejecución");
 
-        save_cicles.setBackground(new Color(72, 149, 125));
-        save_cicles.setForeground(new Color(255, 255, 255));
-        save_cicles.setText("  Guardar cambios  ");
-        save_cicles.setBorder(null);
-        save_cicles.setBorderPainted(false);
-        save_cicles.addActionListener(new ActionListener() {
+        save_mode.setBackground(new Color(72, 149, 125));
+        save_mode.setForeground(new Color(255, 255, 255));
+        save_mode.setText("  Guardar cambios  ");
+        save_mode.setBorder(null);
+        save_mode.setBorderPainted(false);
+        save_mode.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                save_ciclesActionPerformed(evt);
+                save_modeActionPerformed(evt);
             }
         });
+
+        execution_mode_select.setForeground(new Color(51, 51, 51));
 
         GroupLayout panel4Layout = new GroupLayout(panel4);
         panel4.setLayout(panel4Layout);
@@ -900,16 +805,26 @@ public class Interface extends javax.swing.JFrame {
             .addComponent(jLabel9, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
                 .addContainerGap(115, Short.MAX_VALUE)
-                .addComponent(save_cicles)
+                .addComponent(save_mode)
                 .addGap(110, 110, 110))
+            .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
+                    .addContainerGap(58, Short.MAX_VALUE)
+                    .addComponent(execution_mode_select, GroupLayout.PREFERRED_SIZE, 208, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(61, Short.MAX_VALUE)))
         );
         panel4Layout.setVerticalGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel4Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel9)
                 .addGap(62, 62, 62)
-                .addComponent(save_cicles, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                .addComponent(save_mode, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(12, Short.MAX_VALUE))
+            .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
+                    .addContainerGap(55, Short.MAX_VALUE)
+                    .addComponent(execution_mode_select, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(55, Short.MAX_VALUE)))
         );
 
         panel5.setBackground(new Color(93, 154, 135));
@@ -976,15 +891,22 @@ public class Interface extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void save_ciclesActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_ciclesActionPerformed
-        
-    }//GEN-LAST:event_save_ciclesActionPerformed
+    private void save_modeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_modeActionPerformed
+        if ("Modo usuario".equals(execution_mode_select.getSelectedItem())){
+            setActual_mode(1);
+        } else {
+            setActual_mode(0);
+        }
+    }//GEN-LAST:event_save_modeActionPerformed
 
-    private void create_processActionPerformed(ActionEvent evt) {//GEN-FIRST:event_create_processActionPerformed
+    private void execute_crudActionPerformed(ActionEvent evt) {//GEN-FIRST:event_execute_crudActionPerformed
         // create Process (use the correct text field for the name; set_process_name is the JTextField)
         
+        if (actual_mode == 1){
+            JOptionPane.showMessageDialog(rootPane, "No se encuentra en modo administrador, esta accción no puede ser ejecutada.");
+        } 
 
-    }//GEN-LAST:event_create_processActionPerformed
+    }//GEN-LAST:event_execute_crudActionPerformed
 
     private void save_policyActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_policyActionPerformed
         // TODO add your handling code here:
@@ -1001,9 +923,9 @@ public class Interface extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_file_nameActionPerformed
 
-    private void file_name1ActionPerformed(ActionEvent evt) {//GEN-FIRST:event_file_name1ActionPerformed
+    private void file_directoryActionPerformed(ActionEvent evt) {//GEN-FIRST:event_file_directoryActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_file_name1ActionPerformed
+    }//GEN-LAST:event_file_directoryActionPerformed
 
     
     /**
@@ -1048,13 +970,13 @@ public class Interface extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private Panel archive;
     private Panel config_panel;
-    private JButton create_process;
+    private Choice crud_selection;
+    private JButton execute_crud;
     private Label execution_mode;
+    private Choice execution_mode_select;
+    private JTextField file_directory;
     private JTextField file_name;
-    private JTextField file_name1;
     private JButton generate_processes;
-    private JLabel global_clock;
-    private JLabel global_clock1;
     private Panel graphics_panel;
     private JLabel jLabel10;
     private JLabel jLabel11;
@@ -1067,7 +989,6 @@ public class Interface extends javax.swing.JFrame {
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
-    private JScrollPane jScrollPane5;
     private JScrollPane jScrollPane6;
     private JScrollPane jScrollPane9;
     private JTable jTable1;
@@ -1084,12 +1005,25 @@ public class Interface extends javax.swing.JFrame {
     private Panel panel7;
     private Panel panel9;
     private Choice planification_choose;
-    private Choice process_type;
-    private JButton save_cicles;
+    private JButton save_mode;
     private JButton save_policy;
     private JTabbedPane selection;
     private JTextArea show_actual;
     private JTextArea show_terminated;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the actual_mode
+     */
+    public int getActual_mode() {
+        return actual_mode;
+    }
+
+    /**
+     * @param actual_mode the actual_mode to set
+     */
+    public void setActual_mode(int actual_mode) {
+        this.actual_mode = actual_mode;
+    }
 
 }

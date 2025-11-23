@@ -89,6 +89,7 @@ public class Disk {
         
     }
     
+    /*
     public int getClosestScan(){
         int i = 0;
         int closest = 100;
@@ -117,5 +118,6 @@ public class Disk {
             }
         }
         return closestRequest.getFileId();
-    }       
+    }  
+    */
 }

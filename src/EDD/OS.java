@@ -38,6 +38,17 @@ public class OS {
         
     }
     
+    public Proceso getActiveProcess(){
+    
+        for (int i = 0; i < getProcessList().count(); i++){
+            Proceso obj = (Proceso) getProcessList().get(i);
+            if ("running".equals(obj.getPcb().getStatus())){
+                return obj;
+            }
+        }
+        return null;
+    }
+    
     /*
     
     public boolean canBeReady(Proceso process){
