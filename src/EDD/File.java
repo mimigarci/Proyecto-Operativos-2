@@ -13,16 +13,16 @@ public class File {
     private int id;
     private int depth;
     private int size;
-    private Lista fileBlocks;
+    private Lista fileBlocks = new Lista();
     private boolean isPublic;
-    private Lista path;
+    //private Lista path;
 
-    public File(int id, String name, int size, boolean isPublic, Lista path) {
+    public File(int id, String name, int size, boolean isPublic) {
         this.id = id;
         this.name = name;
         this.size = size;
         this.isPublic = isPublic;
-        this.path = path;
+        //this.path = path;
     }
 
     public String getName() {
@@ -57,6 +57,7 @@ public class File {
         this.fileBlocks = fileBlocks;
     }
 
+    /*
     public Lista getPath() {
         return path;
     }
@@ -64,9 +65,14 @@ public class File {
     public void setPath(Lista path) {
         this.path = path;
     }
-
+    */
     public boolean isPublic() {
         return isPublic;
+    }
+    
+    @Override
+    public String toString() {
+        return name; // lo que se mostrará en el JTree
     }
     
 }

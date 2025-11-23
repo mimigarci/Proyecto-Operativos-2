@@ -6,7 +6,10 @@ package Interfaz;
 
 import EDD.Block;
 import EDD.Cola;
+import EDD.Directory;
 import EDD.Disk;
+import EDD.File;
+import EDD.Lista;
 import EDD.PCB;
 import EDD.Proceso;
 import EDD.OS;
@@ -42,6 +45,8 @@ import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 /**
  *
@@ -63,10 +68,14 @@ public class Interface extends javax.swing.JFrame {
     private int busyTicks = 0;
     private int totalTicks = 0;
     
+    private JTable table_files;
+    private Lista allNodes = new Lista();
+    private DefaultMutableTreeNode root;
+    private DefaultTreeModel tree;
     private javax.swing.JPanel readyContainer;           // for jScrollPane3 (Cola de Listos)
     private javax.swing.JPanel blockedContainer;         // for jScrollPane5 (Cola de Bloqueados)
     
-    private JTable table_files;
+    
     /**
      * Creates new form Interfacesp
      */
@@ -74,6 +83,7 @@ public class Interface extends javax.swing.JFrame {
         initComponents();
         setupScrollContainers();
         buildTable();
+        buildTree();
     }
     
     
@@ -100,6 +110,10 @@ public class Interface extends javax.swing.JFrame {
         crud_selection.add("Crear");
         crud_selection.add("Actualizar");
         crud_selection.add("Eliminar");
+        
+        privacy_selection.add("N/A");
+        privacy_selection.add("Privado");
+        privacy_selection.add("Publico");
         
         execution_mode_select.add("Modo usuario");
         execution_mode_select.add("Modo administrador");
@@ -415,19 +429,90 @@ public class Interface extends javax.swing.JFrame {
         if (null != crud_selection.getSelectedItem())
             switch (crud_selection.getSelectedItem()) {
             case "Crear" -> {
-                // Funcion de crear archivo
+                if (searchNodeByName(root, file_name.toString()) == null){
+                    int size = Integer.parseInt(JOptionPane.showInputDialog("Introduzca en numeros el tamaño del archivo"));
+                    Boolean privacy = null;
+                    switch (privacy_selection.getSelectedIndex()) {
+                        case 1 -> privacy = false;
+                        case 2 -> privacy = true;
+                        default -> System.out.println("Debe seleccionar una privacidad para el archivo");
+                    }
+                    
+                    if (privacy != null){
+                        File file = new File(allNodes.count()+1, file_name.toString(), size, privacy);
+                        assignSpaceInDisk(size, file.getFileBlocks());  // Llena la lista
+                        
+                        if ((searchNodeByName(root, file_directory.toString())) != null){
+                            DefaultMutableTreeNode father = searchNodeByName(root, file_directory.toString());
+                            DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
+                            father.add(child);
+                            
+                            selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
+                            addToTable(file.getFileBlocks());   //Pinta dentro de la tabla
+                            // Falta agregar al disco
+                            System.out.println("creado");
+                        } else {
+                            System.out.println("Directorio inválido");
+                        }
+                    }
+                } else {
+                    System.out.println("No se puede crear un archivo bajo ese nombre");
+                }
             }
             case "Actualizar" -> {
                 String new_name = JOptionPane.showInputDialog("Introduzca el nuevo nombre del archivo: ");
-                // Funcion de actualizar nombre
+                Boolean can_update = true;
                 
+                if (!"".equals(new_name)){
+                    for (int i = 0; i < allNodes.count(); i++){
+                            DefaultMutableTreeNode aux = (DefaultMutableTreeNode)allNodes.get(i);
+                            if (aux.toString().equals(new_name)){
+                                JOptionPane.showMessageDialog(rootPane, "Ya existe un archivo con ese nombre, escoja otro.");
+                                can_update = false;
+                                break;
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "Debe introducir un nombre válido");
+                }
+                
+                if (can_update == true){
+                    file_name.toString();
+                    file_directory.toString(); // Realmente este no es necesario pero bueno
+                    
+                    if (searchNodeByName(root, file_name.toString()) != null){
+                        // Cambio de nombre en disco
+                        System.out.println("actualizado");
+                    } else {
+                        System.out.println("No se encontro el archivo");
+                    }
+                    
+                }
             }
             case "Eliminar" -> {
-                // Función de eliminar archivo
+                
+                if (searchNodeByName(root, file_name.toString()) != null){
+                        DefaultMutableTreeNode child = searchNodeByName(root, file_name.toString());
+                        DefaultMutableTreeNode parent = searchNodeByName(root, file_directory.toString());
+                        
+                        if (parent != null && child != null){
+                            tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
+                            // Función de eliminar archivo/directorio del disco
+                        } else {
+                            System.out.println("El archivo o el padre no existe. revise los datos");
+                        }
+                        
+                        System.out.println("eliminado");
+                } else {
+                    System.out.println("No se encontro el archivo");
+                }
             }
         }
-    
+        
+        updateTree();
+        updateTable();
     }
+    
     
     public void buildTable(){
         int filas = 8;
@@ -461,23 +546,166 @@ public class Interface extends javax.swing.JFrame {
             tabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
         }
         
-        tabla.setRowHeight(80); // altura de cada fila
+        tabla.setRowHeight(80); // altura de cada row
         for (int i = 0; i < columnas; i++) {
             tabla.getColumnModel().getColumn(i).setPreferredWidth(40);
+        }
+        
+        // Crear bloques en disco
+        for (int i = 0; i < 64; i++){
+            Block newBlock = new Block(i);
+            disk.getSpaces()[i] = newBlock;
         }
         
         jScrollPane2.setViewportView(tabla);
         table_files = tabla;
     }
     
+    private void buildTree(){
+        Directory main_dir = new Directory("Archivos");
+        Directory dir1 = new Directory("Proyecto1");
+        Directory dir2 = new Directory("Proyecto2");
+        File file1 = new File(0, "main1", 5, true); 
+        File file2 = new File(1, "main2", 5, false); 
+        
+        DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); // Aparece como si fuese un archivo pero realmente es un directorio
+        DefaultMutableTreeNode child1 = new DefaultMutableTreeNode(dir1); 
+        DefaultMutableTreeNode child2 = new DefaultMutableTreeNode(dir2); 
+        DefaultMutableTreeNode file_1 = new DefaultMutableTreeNode(file1); 
+        DefaultMutableTreeNode file_2= new DefaultMutableTreeNode(file2); 
+        
+        newRoot.add(child1);
+        newRoot.add(child2);
+        child1.add(file_1);
+        child2.add(file_2);
+        
+        root = newRoot;
+        DefaultTreeModel model = new DefaultTreeModel(root);
+        tree = model;
+        allNodes = getAllNodes(root);
+        
+        jTree1.setModel(model);
+    }
+    
+    public DefaultMutableTreeNode searchNodeByName(DefaultMutableTreeNode root, String nombre) {
+        // Si el nodo actual coincide, lo retornamos
+        if (root.getUserObject().toString().equals(nombre)) {
+            return root;
+        }
+
+        // Recorrer hijos recursivamente
+        for (int i = 0; i < root.getChildCount(); i++) {
+            DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) root.getChildAt(i);
+            DefaultMutableTreeNode resultado = searchNodeByName(hijo, nombre);
+            if (resultado != null) {
+                return resultado;
+            }
+        }
+        
+        return null;
+    }
+    
+    public int countNodes(DefaultMutableTreeNode node) {
+        int total = 1; // contar el node actual
+
+        for (int i = 0; i < node.getChildCount(); i++) {
+            DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) node.getChildAt(i);
+            total += countNodes(hijo); // sumar los hijos recursivamente
+        }
+
+        return total;
+    }
+
+    public Lista getAllNodes(DefaultMutableTreeNode root) {
+        Lista lista = new Lista();
+        findNodes(root, lista);
+        return lista;
+    }
+
+    private void findNodes(DefaultMutableTreeNode node, Lista lista) {
+        // Agregar el node actual
+        lista.add(node);
+
+        // Recorrer hijos
+        for (int i = 0; i < node.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
+            findNodes(child, lista);
+        }
+    }
+
+    
     private void updateTable(){
-        Block new_block = new Block("p",4);
-        new_block.setColor(Color.yellow);
-        table_files.setValueAt(new_block, 1, 1);
+        allNodes = getAllNodes(root);
+        String txt = ""; 
+        
+        // Limpia la tabla
+        for (int row = 0; row < table_files.getRowCount(); row++) {
+            for (int column = 0; column < table_files.getColumnCount(); column++) {
+                Block aux = new Block(row);
+                table_files.setValueAt(aux, row, column);
+            }
+        }
+        
+        // Vuelve a pintar la tabla
+        for (int i = 0; i < allNodes.count(); i++){
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) allNodes.get(i);
+            if (node.getUserObject() instanceof File file){
+                addToTable(file.getFileBlocks());
+                Block start = (Block) file.getFileBlocks().get(0);
+                Block end = (Block) file.getFileBlocks().get((file.getFileBlocks().count()-1));
+                
+                txt += "\n" + file.getName() + ". Inicio: " + start.getX() + ", "+ start.getY() + ", Fin: " + end.getX() + ", " + start.getY(); 
+            }
+        }
+        
+        show_actual1.setText(txt);
+    }
+    
+    
+    
+    public void addToTable(Lista blockList){
+        for (int i = 0; i < blockList.count(); i++){
+            Block aux = (Block) blockList.get(i);
+            aux.setColor(Color.green);
+            table_files.setValueAt(aux, aux.getX(), aux.getY());
+        }
+    }
+    
+    public void assignSpaceInDisk(int amount, Lista fileList){
+        for (int i = 0; i < amount; i++){
+            Block aux = (Block) disk.getSpaces()[i];
+            if ("Empty".equals(aux.getContent())){
+                fileList.add(aux);
+            }
+        }
+    }
+    
+    public void selectSpacesInTable(Lista blockList){
+        int count = 0;
+        for (int row = 0; row < table_files.getRowCount(); row++) {
+            for (int column = 0; column < table_files.getColumnCount(); column++) {
+                Object valor = table_files.getValueAt(row, column);
+                if (valor instanceof Color color) {
+                    if (color == Color.WHITE){
+                        if (count < blockList.count()){
+                        Block aux = (Block) blockList.get(count);
+                        aux.setX(row);
+                        aux.setY(column);
+                        count++;
+                        } else {
+                            break;
+                        }      
+                    }
+                }
+            }
+        }
+    }
+    
+    public void selectColors(){
+    
     }
     
     public void updateTree(){
-    
     }
     
     /**
@@ -507,6 +735,8 @@ public class Interface extends javax.swing.JFrame {
         file_name = new JTextField();
         file_directory = new JTextField();
         label11 = new Label();
+        label13 = new Label();
+        privacy_selection = new Choice();
         jLabel3 = new JLabel();
         jLabel14 = new JLabel();
         panel3 = new Panel();
@@ -599,7 +829,7 @@ public class Interface extends javax.swing.JFrame {
 
         label10.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
         label10.setForeground(new Color(51, 51, 51));
-        label10.setText("Nombre del archivo");
+        label10.setText("Nombre del archivo o directorio");
 
         crud_selection.setForeground(new Color(51, 51, 51));
 
@@ -630,32 +860,44 @@ public class Interface extends javax.swing.JFrame {
         label11.setForeground(new Color(51, 51, 51));
         label11.setText("Nombre del directorio");
 
+        label13.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
+        label13.setForeground(new Color(51, 51, 51));
+        label13.setText("Privacidad");
+
+        privacy_selection.setForeground(new Color(51, 51, 51));
+
         GroupLayout panel2Layout = new GroupLayout(panel2);
         panel2.setLayout(panel2Layout);
         panel2Layout.setHorizontalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
                 .addGap(143, 143, 143)
-                .addComponent(execute_crud, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                .addComponent(execute_crud, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
                 .addGap(130, 130, 130))
             .addComponent(jLabel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel2Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(file_directory, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                    .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                    .addComponent(crud_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panel2Layout.createSequentialGroup()
+                        .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGap(137, 137, 137)
+                        .addComponent(privacy_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panel2Layout.createSequentialGroup()
+                        .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addComponent(file_directory, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                            .addComponent(crud_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(36, 36, 36))
         );
         panel2Layout.setVerticalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel2Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel2)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(crud_selection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -667,10 +909,16 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(file_directory, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(privacy_selection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(execute_crud, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
+
+        label10.getAccessibleContext().setAccessibleName("Nombre del archivo o directorio");
 
         jLabel3.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
         jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -702,7 +950,7 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout panel3Layout = new GroupLayout(panel3);
         panel3.setLayout(panel3Layout);
         panel3Layout.setHorizontalGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+            .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
             .addGroup(panel3Layout.createSequentialGroup()
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(save_policy, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
@@ -782,7 +1030,15 @@ public class Interface extends javax.swing.JFrame {
         archiveLayout.setVerticalGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(archiveLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
-                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addGroup(archiveLayout.createSequentialGroup()
+                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
                     .addGroup(archiveLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -790,19 +1046,10 @@ public class Interface extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel14)
                         .addGap(7, 7, 7)
-                        .addComponent(jScrollPane9, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(archiveLayout.createSequentialGroup()
-                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(panel3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(archiveLayout.createSequentialGroup()
-                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(53, Short.MAX_VALUE))
+                        .addComponent(jScrollPane9, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         selection.addTab("Administrador de archivos", archive);
@@ -857,7 +1104,7 @@ public class Interface extends javax.swing.JFrame {
             .addGroup(memory_tableLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         selection.addTab("Tabla de memoria", memory_table);
@@ -918,7 +1165,7 @@ public class Interface extends javax.swing.JFrame {
         execution_mode.setAlignment(Label.CENTER);
         execution_mode.setFont(new Font("Segoe UI", 1, 48)); // NOI18N
         execution_mode.setForeground(new Color(51, 51, 51));
-        execution_mode.setText("1");
+        execution_mode.setText("Admin");
 
         GroupLayout panel5Layout = new GroupLayout(panel5);
         panel5.setLayout(panel5Layout);
@@ -951,7 +1198,7 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(config_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(526, Short.MAX_VALUE))
+                .addContainerGap(551, Short.MAX_VALUE))
         );
 
         selection.addTab("Configuración", config_panel);
@@ -962,7 +1209,7 @@ public class Interface extends javax.swing.JFrame {
             .addGap(0, 1441, Short.MAX_VALUE)
         );
         graphics_panelLayout.setVerticalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 698, Short.MAX_VALUE)
+            .addGap(0, 723, Short.MAX_VALUE)
         );
 
         selection.addTab("Gráficos", graphics_panel);
@@ -976,18 +1223,22 @@ public class Interface extends javax.swing.JFrame {
     private void save_modeActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_modeActionPerformed
         if ("Modo usuario".equals(execution_mode_select.getSelectedItem())){
             setActual_mode(1);
+            execution_mode.setText("User");
         } else {
             setActual_mode(0);
+            execution_mode.setText("Admin");
         }
     }//GEN-LAST:event_save_modeActionPerformed
 
     private void execute_crudActionPerformed(ActionEvent evt) {//GEN-FIRST:event_execute_crudActionPerformed
         // create Process (use the correct text field for the name; set_process_name is the JTextField)
         updateTable();
+        DefaultMutableTreeNode found = searchNodeByName(root, "main1");
+        System.out.println(found.toString());
         if (actual_mode == 1){
             JOptionPane.showMessageDialog(rootPane, "No se encuentra en modo administrador, esta accción no puede ser ejecutada.");
         } else {
-        
+            executeCrud();
         }
 
     }//GEN-LAST:event_execute_crudActionPerformed
@@ -1080,6 +1331,7 @@ public class Interface extends javax.swing.JFrame {
     private Label label10;
     private Label label11;
     private Label label12;
+    private Label label13;
     private Label label9;
     private Panel memory_table;
     private Panel panel1;
@@ -1090,6 +1342,7 @@ public class Interface extends javax.swing.JFrame {
     private Panel panel7;
     private Panel panel9;
     private Choice planification_choose;
+    private Choice privacy_selection;
     private JButton save_mode;
     private JButton save_policy;
     private JTabbedPane selection;
