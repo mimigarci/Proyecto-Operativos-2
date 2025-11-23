@@ -4,6 +4,8 @@
  */
 package EDD;
 
+import java.awt.Color;
+
 /**
  *
  * @author Eddy
@@ -11,6 +13,11 @@ package EDD;
 public class Block {
     private String content;
     private int position;
+ 
+    // posiciones dentro de la tabla
+    private int x = 0;   
+    private int y = 0;
+    private Color color = Color.WHITE;
 
     public Block(int position) {
         this.content = "Empty";
@@ -37,6 +44,49 @@ public class Block {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    /**
+     * @return the x
+     */
+    public int getX() {
+        return x;
+    }
+
+    /**
+     * @param x the x to set
+     */
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    /**
+     * @return the y
+     */
+    public int getY() {
+        return y;
+    }
+
+    /**
+     * @param y the y to set
+     */
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    /**
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
+    
     
     
     

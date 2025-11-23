@@ -4,6 +4,7 @@
  */
 package Interfaz;
 
+import EDD.Block;
 import EDD.Cola;
 import EDD.Disk;
 import EDD.PCB;
@@ -12,6 +13,7 @@ import EDD.OS;
 import EDD.QueueChangeListener;
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -34,10 +36,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.LayoutStyle;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -61,13 +65,15 @@ public class Interface extends javax.swing.JFrame {
     
     private javax.swing.JPanel readyContainer;           // for jScrollPane3 (Cola de Listos)
     private javax.swing.JPanel blockedContainer;         // for jScrollPane5 (Cola de Bloqueados)
-        
+    
+    private JTable table_files;
     /**
      * Creates new form Interfacesp
      */
     public Interface() {
         initComponents();
         setupScrollContainers();
+        buildTable();
     }
     
     
@@ -404,6 +410,72 @@ public class Interface extends javax.swing.JFrame {
         super.dispose();
     }
     
+    private void executeCrud(){
+    
+        if (null != crud_selection.getSelectedItem())
+            switch (crud_selection.getSelectedItem()) {
+            case "Crear" -> {
+                // Funcion de crear archivo
+            }
+            case "Actualizar" -> {
+                String new_name = JOptionPane.showInputDialog("Introduzca el nuevo nombre del archivo: ");
+                // Funcion de actualizar nombre
+                
+            }
+            case "Eliminar" -> {
+                // Función de eliminar archivo
+            }
+        }
+    
+    }
+    
+    public void buildTable(){
+        int filas = 8;
+        int columnas = 8;
+
+        DefaultTableModel modelo = new DefaultTableModel(filas, columnas);
+        JTable tabla = new JTable(modelo);
+        
+        // Renderizador personalizado
+        TableCellRenderer renderer = new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+
+                JPanel panel = new JPanel();
+
+                // Si el valor es un Color, úsalo
+                if (value instanceof Block) {
+                    panel.setBackground((((Block) value).getColor()));
+                } else {
+                    panel.setBackground(Color.WHITE); // por defecto
+                }
+
+                return panel;
+            }
+        };
+
+        // Asignar el renderizador a todas las columnas
+        for (int i = 0; i < columnas; i++) {
+            tabla.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+        
+        tabla.setRowHeight(80); // altura de cada fila
+        for (int i = 0; i < columnas; i++) {
+            tabla.getColumnModel().getColumn(i).setPreferredWidth(40);
+        }
+        
+        jScrollPane2.setViewportView(tabla);
+        table_files = tabla;
+    }
+    
+    private void updateTable(){
+        Block new_block = new Block("p",4);
+        new_block.setColor(Color.yellow);
+        table_files.setValueAt(new_block, 1, 1);
+    }
+    
     public void updateTree(){
     
     }
@@ -449,7 +521,9 @@ public class Interface extends javax.swing.JFrame {
         memory_table = new Panel();
         panel7 = new Panel();
         jScrollPane2 = new JScrollPane();
-        jTable1 = new JTable();
+        jScrollPane7 = new JScrollPane();
+        show_actual1 = new JTextArea();
+        label12 = new Label();
         config_panel = new Panel();
         panel4 = new Panel();
         jLabel9 = new JLabel();
@@ -561,7 +635,7 @@ public class Interface extends javax.swing.JFrame {
         panel2Layout.setHorizontalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
                 .addGap(143, 143, 143)
-                .addComponent(execute_crud, GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+                .addComponent(execute_crud, GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
                 .addGap(130, 130, 130))
             .addComponent(jLabel2, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panel2Layout.createSequentialGroup()
@@ -628,7 +702,7 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout panel3Layout = new GroupLayout(panel3);
         panel3.setLayout(panel3Layout);
         panel3Layout.setHorizontalGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+            .addComponent(jLabel5, GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
             .addGroup(panel3Layout.createSequentialGroup()
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(save_policy, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
@@ -728,39 +802,47 @@ public class Interface extends javax.swing.JFrame {
                         .addGap(39, 39, 39)
                         .addComponent(generate_processes, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
                     .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         selection.addTab("Administrador de archivos", archive);
 
         panel7.setBackground(new Color(201, 255, 238));
 
-        jTable1.setModel(new DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable1);
+        show_actual1.setEditable(false);
+        show_actual1.setColumns(20);
+        show_actual1.setRows(5);
+        jScrollPane7.setViewportView(show_actual1);
+
+        label12.setAlignment(Label.CENTER);
+        label12.setFont(new Font("Century Gothic", 1, 24)); // NOI18N
+        label12.setForeground(new Color(51, 51, 51));
+        label12.setText("Archivos guardados");
 
         GroupLayout panel7Layout = new GroupLayout(panel7);
         panel7.setLayout(panel7Layout);
         panel7Layout.setHorizontalGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel7Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 477, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(22, 22, 22)
+                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 972, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane7)
+                    .addComponent(label12, GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         panel7Layout.setVerticalGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+            .addGroup(panel7Layout.createSequentialGroup()
+                .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(panel7Layout.createSequentialGroup()
+                        .addGap(53, 53, 53)
+                        .addComponent(label12, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48)
+                        .addComponent(jScrollPane7, GroupLayout.PREFERRED_SIZE, 466, GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panel7Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 602, GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         GroupLayout memory_tableLayout = new GroupLayout(memory_table);
@@ -768,14 +850,14 @@ public class Interface extends javax.swing.JFrame {
         memory_tableLayout.setHorizontalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(memory_tableLayout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(884, Short.MAX_VALUE))
+                .addComponent(panel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         memory_tableLayout.setVerticalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(memory_tableLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         selection.addTab("Tabla de memoria", memory_table);
@@ -861,7 +943,7 @@ public class Interface extends javax.swing.JFrame {
                 .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(798, Short.MAX_VALUE))
+                .addContainerGap(818, Short.MAX_VALUE))
         );
         config_panelLayout.setVerticalGroup(config_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(config_panelLayout.createSequentialGroup()
@@ -869,7 +951,7 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(config_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(506, Short.MAX_VALUE))
+                .addContainerGap(526, Short.MAX_VALUE))
         );
 
         selection.addTab("Configuración", config_panel);
@@ -877,10 +959,10 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout graphics_panelLayout = new GroupLayout(graphics_panel);
         graphics_panel.setLayout(graphics_panelLayout);
         graphics_panelLayout.setHorizontalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 1421, Short.MAX_VALUE)
+            .addGap(0, 1441, Short.MAX_VALUE)
         );
         graphics_panelLayout.setVerticalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 678, Short.MAX_VALUE)
+            .addGap(0, 698, Short.MAX_VALUE)
         );
 
         selection.addTab("Gráficos", graphics_panel);
@@ -901,10 +983,12 @@ public class Interface extends javax.swing.JFrame {
 
     private void execute_crudActionPerformed(ActionEvent evt) {//GEN-FIRST:event_execute_crudActionPerformed
         // create Process (use the correct text field for the name; set_process_name is the JTextField)
-        
+        updateTable();
         if (actual_mode == 1){
             JOptionPane.showMessageDialog(rootPane, "No se encuentra en modo administrador, esta accción no puede ser ejecutada.");
-        } 
+        } else {
+        
+        }
 
     }//GEN-LAST:event_execute_crudActionPerformed
 
@@ -990,11 +1074,12 @@ public class Interface extends javax.swing.JFrame {
     private JScrollPane jScrollPane2;
     private JScrollPane jScrollPane3;
     private JScrollPane jScrollPane6;
+    private JScrollPane jScrollPane7;
     private JScrollPane jScrollPane9;
-    private JTable jTable1;
     private JTree jTree1;
     private Label label10;
     private Label label11;
+    private Label label12;
     private Label label9;
     private Panel memory_table;
     private Panel panel1;
@@ -1009,6 +1094,7 @@ public class Interface extends javax.swing.JFrame {
     private JButton save_policy;
     private JTabbedPane selection;
     private JTextArea show_actual;
+    private JTextArea show_actual1;
     private JTextArea show_terminated;
     // End of variables declaration//GEN-END:variables
 
