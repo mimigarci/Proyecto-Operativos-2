@@ -59,7 +59,7 @@ public class Interface extends javax.swing.JFrame {
     private int planification;
     private boolean isSchedulerActive = false;
     private Thread schedulerThread;
-    private Disk disk;
+    private Disk disk = new Disk();
     private int actual_mode = 0; //0 ---> administrador, 1 ---> usuario
     
    // private Lista devices = operativeSystem.getDeviceTable();    //---> No creo que sea necesario, se accede directamente a lo que está dentro del sistema operativo
@@ -440,13 +440,13 @@ public class Interface extends javax.swing.JFrame {
                     
                     if (privacy != null){
                         File file = new File(allNodes.count()+1, file_name.toString(), size, privacy);
-                        assignSpaceInDisk(size, file.getFileBlocks());  // Llena la lista
                         
                         if ((searchNodeByName(root, file_directory.toString())) != null){
                             DefaultMutableTreeNode father = searchNodeByName(root, file_directory.toString());
                             DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
                             father.add(child);
                             
+                            assignSpaceInDisk(size, file.getFileBlocks()); // Llena la lista
                             selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
                             addToTable(file.getFileBlocks());   //Pinta dentro de la tabla
                             // Falta agregar al disco
@@ -568,6 +568,14 @@ public class Interface extends javax.swing.JFrame {
         File file1 = new File(0, "main1", 5, true); 
         File file2 = new File(1, "main2", 5, false); 
         
+        assignSpaceInDisk(file1.getSize(), file1.getFileBlocks()); // Llena la lista
+        selectSpacesInTable(file1.getFileBlocks()); //Asigna las posiciones en la tabla
+        addToTable(file1.getFileBlocks());  
+        
+        assignSpaceInDisk(file2.getSize(), file2.getFileBlocks()); // Llena la lista
+        selectSpacesInTable(file2.getFileBlocks()); //Asigna las posiciones en la tabla
+        addToTable(file2.getFileBlocks());  
+         
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); // Aparece como si fuese un archivo pero realmente es un directorio
         DefaultMutableTreeNode child1 = new DefaultMutableTreeNode(dir1); 
         DefaultMutableTreeNode child2 = new DefaultMutableTreeNode(dir2); 
@@ -658,6 +666,7 @@ public class Interface extends javax.swing.JFrame {
             }
         }
         
+        // Mostrar archivos registrados
         show_actual1.setText(txt);
     }
     
@@ -666,7 +675,8 @@ public class Interface extends javax.swing.JFrame {
     public void addToTable(Lista blockList){
         for (int i = 0; i < blockList.count(); i++){
             Block aux = (Block) blockList.get(i);
-            aux.setColor(Color.green);
+            Color color = selectColors();
+            aux.setColor(color);
             table_files.setValueAt(aux, aux.getX(), aux.getY());
         }
     }
@@ -701,8 +711,11 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void selectColors(){
-    
+    public Color selectColors(){
+        int r = (int)(Math.random() * 256); // 0–255
+        int g = (int)(Math.random() * 256);
+        int b = (int)(Math.random() * 256);
+        return new Color(r, g, b);
     }
     
     public void updateTree(){
