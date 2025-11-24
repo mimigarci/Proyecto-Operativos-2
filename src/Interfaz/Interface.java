@@ -672,7 +672,7 @@ public class Interface extends javax.swing.JFrame {
                 Block start = (Block) file.getFileBlocks().get(0);
                 Block end = (Block) file.getFileBlocks().get((file.getFileBlocks().count()-1));
                 
-                txt += "\n" + file.getName() + ". Inicio: " + start.getX() + ", "+ start.getY() + ", Fin: " + end.getX() + ", " + start.getY(); 
+                txt += "\n" + file.getName() + ". Inicio: " + start.getX() + ", "+ start.getY() + ", Fin: " + end.getX() + ", " + end.getY(); 
             }
         }
         
@@ -948,8 +948,6 @@ public class Interface extends javax.swing.JFrame {
                 .addGap(20, 20, 20))
         );
 
-        label10.getAccessibleContext().setAccessibleName("Nombre del archivo o directorio");
-
         jLabel3.setFont(new Font("Century Gothic", 1, 12)); // NOI18N
         jLabel3.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel3.setText("Cola de Listos");
@@ -1088,6 +1086,7 @@ public class Interface extends javax.swing.JFrame {
 
         show_actual1.setEditable(false);
         show_actual1.setColumns(20);
+        show_actual1.setFont(new Font("Century Gothic", 0, 14)); // NOI18N
         show_actual1.setRows(5);
         jScrollPane7.setViewportView(show_actual1);
 
