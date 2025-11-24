@@ -469,6 +469,17 @@ public class Interface extends javax.swing.JFrame {
                 show_terminated1.setText("Debe introducir una cantidad válida");
                 return;
             }
+            
+            // Validate file size
+            if (size <= 0) {
+                show_terminated1.setText("El tamaño del archivo debe ser mayor a 0.");
+                return;
+            }
+            
+            if (size > 64) {
+                show_terminated1.setText("El tamaño del archivo no puede exceder 64 bloques.");
+                return;
+            }
 
             Boolean privacy = null;
             switch (privacy_selection.getSelectedIndex()) {
@@ -484,13 +495,13 @@ public class Interface extends javax.swing.JFrame {
                     DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
                     DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
                     
-                    assignSpaceInDisk(size, file.getFileBlocks()); // Llena la lista
-                    selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
-                    addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
+                    if (assignSpaceInDisk(size, file.getFileBlocks()) == true) {
+                        selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
+                        addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
+                        tree.insertNodeInto(child, father, father.getChildCount());
+                        show_terminated1.setText("Se ha creado el archivo exitosamente.");
+                    }// Llena la lista
                     
-                    tree.insertNodeInto(child, father, father.getChildCount());
-                    // Falta agregar al disco
-                    show_terminated1.setText("Se ha creado el archivo exitosamente.");
                 } else {
                     show_terminated1.setText("El directorio no existe.");
                 }
@@ -756,7 +767,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void assignSpaceInDisk(int amount, Lista fileList){
+    public Boolean assignSpaceInDisk(int amount, Lista fileList){
         int assigned = 0;
         Block[] spaces = disk.getSpaces();
         for (int i = 0; i < spaces.length && assigned < amount; i++){
@@ -770,6 +781,9 @@ public class Interface extends javax.swing.JFrame {
         
         if (assigned < amount) {
             show_terminated1.setText("No hay suficiente espacio en disco!");
+            return false;
+        } else {
+            return true;
         }
     }
     
@@ -860,7 +874,6 @@ public class Interface extends javax.swing.JFrame {
         panel5 = new Panel();
         jLabel10 = new JLabel();
         execution_mode = new Label();
-        graphics_panel = new Panel();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.LINE_AXIS));
@@ -1307,17 +1320,6 @@ public class Interface extends javax.swing.JFrame {
 
         selection.addTab("Configuración", config_panel);
 
-        GroupLayout graphics_panelLayout = new GroupLayout(graphics_panel);
-        graphics_panel.setLayout(graphics_panelLayout);
-        graphics_panelLayout.setHorizontalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 1421, Short.MAX_VALUE)
-        );
-        graphics_panelLayout.setVerticalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 725, Short.MAX_VALUE)
-        );
-
-        selection.addTab("Gráficos", graphics_panel);
-
         getContentPane().add(selection);
         selection.getAccessibleContext().setAccessibleName("Gestion de archivos");
 
@@ -1334,10 +1336,10 @@ public class Interface extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_save_modeActionPerformed
 
-    private void execute_crudActionPerformed(ActionEvent evt) {//GEN-FIRST:event_execute_crudActionPerformed
-        // create Process (use the correct text field for the name; set_process_name is the JTextField)
-        executeCrud();
-    }//GEN-LAST:event_execute_crudActionPerformed
+    private void generate_filesActionPerformed(ActionEvent evt) {//GEN-FIRST:event_generate_filesActionPerformed
+        // TODO add your handling code here:
+        buildTree();
+    }//GEN-LAST:event_generate_filesActionPerformed
 
     private void save_policyActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_policyActionPerformed
         // TODO add your handling code here:
@@ -1345,18 +1347,18 @@ public class Interface extends javax.swing.JFrame {
         //startSchedulerBackground();
     }//GEN-LAST:event_save_policyActionPerformed
 
-    private void generate_filesActionPerformed(ActionEvent evt) {//GEN-FIRST:event_generate_filesActionPerformed
+    private void file_directoryActionPerformed(ActionEvent evt) {//GEN-FIRST:event_file_directoryActionPerformed
         // TODO add your handling code here:
-        buildTree();
-    }//GEN-LAST:event_generate_filesActionPerformed
+    }//GEN-LAST:event_file_directoryActionPerformed
 
     private void file_nameActionPerformed(ActionEvent evt) {//GEN-FIRST:event_file_nameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_file_nameActionPerformed
 
-    private void file_directoryActionPerformed(ActionEvent evt) {//GEN-FIRST:event_file_directoryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_file_directoryActionPerformed
+    private void execute_crudActionPerformed(ActionEvent evt) {//GEN-FIRST:event_execute_crudActionPerformed
+        // create Process (use the correct text field for the name; set_process_name is the JTextField)
+        executeCrud();
+    }//GEN-LAST:event_execute_crudActionPerformed
 
     
     /**
@@ -1408,7 +1410,6 @@ public class Interface extends javax.swing.JFrame {
     private JTextField file_directory;
     private JTextField file_name;
     private JButton generate_files;
-    private Panel graphics_panel;
     private JLabel jLabel10;
     private JLabel jLabel11;
     private JLabel jLabel14;
