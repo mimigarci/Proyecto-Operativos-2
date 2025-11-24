@@ -462,7 +462,14 @@ public class Interface extends javax.swing.JFrame {
     
     public void create(){
         if (searchNodeByName(root, file_name.getText()) == null){
-            int size = Integer.parseInt(JOptionPane.showInputDialog("Introduzca en numeros el tamaño del archivo"));
+            int size;
+            try {
+                size = Integer.parseInt(JOptionPane.showInputDialog("Introduzca en numeros el tamaño del archivo"));
+            } catch (Exception evt) {
+                show_terminated1.setText("Debe introducir una cantidad válida");
+                return;
+            }
+
             Boolean privacy = null;
             switch (privacy_selection.getSelectedIndex()) {
                 case 1 -> privacy = false;
@@ -516,7 +523,17 @@ public class Interface extends javax.swing.JFrame {
     public void read(){
         if (searchNodeByName(root, file_name.getText()) != null && searchNodeByName(root, file_directory.getText()) != null){
             File aux = (File) searchNodeByName(root, file_name.getText()).getUserObject();
-            show_terminated1.setText(aux.read());
+            
+            if (!aux.isIsPublic()){
+                if (actual_mode == 0){
+                    show_terminated1.setText(aux.read());
+                } else {
+                    show_terminated1.setText("No posee permisos para leer este archivo");
+                }
+            } else {
+                show_terminated1.setText(aux.read());
+            }
+            
         } else {
             show_terminated1.setText("No se encontró el archivo o el directorio referenciado.");
         }

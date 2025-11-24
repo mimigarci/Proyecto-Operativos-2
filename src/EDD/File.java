@@ -78,7 +78,7 @@ public class File {
     }
     */
     public boolean isPublic() {
-        return isPublic;
+        return isIsPublic();
     }
 
     public Color getColor() {
@@ -102,6 +102,20 @@ public class File {
             txt += aux.getPosition()+  ": " + aux.getContent() +"\n";
         }
         return txt;
+    }
+
+    /**
+     * @return the isPublic
+     */
+    public boolean isIsPublic() {
+        return isPublic;
+    }
+
+    /**
+     * @param isPublic the isPublic to set
+     */
+    public void setIsPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
     
 }
