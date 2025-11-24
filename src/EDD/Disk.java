@@ -16,7 +16,6 @@ public class Disk {
     private int direction;
     private int planification;
     private Cola requests;
-    private Directory root;
 
     public Disk() {
         this.spaces = new Block[64];
@@ -26,7 +25,6 @@ public class Disk {
         this.direction = 0;
         this.planification = 0;
         this.requests = new Cola();
-        this.root = new Directory(0, new Lista());
     }
 
     public Block[] getSpaces() {
@@ -85,13 +83,96 @@ public class Disk {
         this.requests = requests;
     }    
     
-    public void getClosest() {
-        
+    public void switchDirection() {
+        if (getDirection() == 1){
+            setDirection(-1);
+        } else {
+            setDirection(1);
+        }
     }
     
-    /*
-    public int getClosestScan(){
+    public void manageRequests(){
+        while (getRequests().getCount() > 0){
+            Request requestToAttend = null;
+            switch (getPlanification()) {
+            //FIFO
+                case 0:
+                    requestToAttend = getNextFifo();
+
+            //SCAN
+                case 1:
+                    requestToAttend = getClosestScan();
+                    
+            //C-SCAN
+                case 2:
+                    requestToAttend = getClosestCscan();
+                    
+            //SSTF
+                case 3:
+                    requestToAttend = getClosestSsft();
+                    
+            }
+            if (requestToAttend == null) {
+                break;
+            }
+            switch (getPlanification()) {
+            //FIFO
+                case 0:
+                    requestToAttend = getNextFifo();
+
+            //SCAN
+                case 1:
+                    requestToAttend = getClosestScan();
+                    
+            //C-SCAN
+                case 2:
+                    requestToAttend = getClosestCscan();
+                    
+            //SSTF
+                case 3:
+                    requestToAttend = getClosestSsft();
+                    
+            }
+        }
+    }
+    
+    public Request getClosestSsft() {
         int i = 0;
+        int index = -1;
+        int closest = 100;
+        int current;
+        Request closestRequest = new Request(10000, 10000, 10000);
+        Request currentRequest;
+        while (i < getRequests().getCount()) {
+            if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
+                current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
+                currentRequest = (Request) getRequests().get(i);
+                if (current < closest){
+                    closest = current;
+                    closestRequest = currentRequest;
+                    index = i;
+                }
+            } else {
+                current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
+                currentRequest = (Request) getRequests().get(i);
+                if (current < closest){
+                    closest = current;
+                    closestRequest = currentRequest;
+                    index = i;
+                }
+            }
+            i++;
+        }
+        if (closestRequest.getFileAdd() == 10000){
+            return null;
+        }
+        getRequests().removeAt(index);
+        return closestRequest;
+    }
+    
+    public Request getClosestScan(){
+        int i = 0;
+        int index = -1;
         int closest = 100;
         int current;
         Request closestRequest = new Request(10000, 10000, 10000);
@@ -104,6 +185,7 @@ public class Disk {
                     if (current < closest){
                         closest = current;
                         closestRequest = currentRequest;
+                        index = i;
                     }
                 }
             } else {
@@ -113,11 +195,91 @@ public class Disk {
                     if (current < closest){
                         closest = current;
                         closestRequest = currentRequest;
+                        index = i;
                     }
                 }
             }
+            i++;
         }
-        return closestRequest.getFileId();
+        if (closestRequest.getFileAdd() == 10000){
+            switchDirection();
+            i = 0;
+            while (i < getRequests().getCount()) {
+            if (getDirection() == 1) {
+                if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
+                    current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
+                    currentRequest = (Request) getRequests().get(i);
+                    if (current < closest){
+                        closest = current;
+                        closestRequest = currentRequest;
+                        index = i;
+                    }
+                }
+            } else {
+                if (getHeaderPosition() > ((Request) getRequests().get(i)).getFileAdd()){
+                    current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
+                    currentRequest = (Request) getRequests().get(i);
+                    if (current < closest){
+                        closest = current;
+                        closestRequest = currentRequest;
+                        index = i;
+                    }
+                }
+            }
+            i++;
+            }
+        }
+        if (closestRequest.getFileAdd() == 10000){
+            return null;
+        }
+        getRequests().removeAt(index);
+        return closestRequest;
     }  
-    */
+    
+    public Request getClosestCscan(){
+        int i = 0;
+        int index = -1;
+        int closestFront = 100;
+        int farthestBack = -1;
+        int current;
+        Request closestRequest = new Request(10000, 10000, 10000);
+        Request currentRequest;
+        while (i < getRequests().getCount()) {
+            if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
+                current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
+                currentRequest = (Request) getRequests().get(i);
+                if (current < closestFront){
+                    closestFront = current;
+                    closestRequest = currentRequest;
+                    index = i;
+                }
+            }
+            i++;
+        }
+        if (closestRequest.getFileAdd() == 10000){
+            i = 0;
+            while (i < getRequests().getCount()) {
+            if (getHeaderPosition() > ((Request) getRequests().get(i)).getFileAdd()){
+                current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
+                currentRequest = (Request) getRequests().get(i);
+                if (current > farthestBack){
+                    farthestBack = current;
+                    closestRequest = currentRequest;
+                    index = i;
+                }
+            }
+            i++;
+            }
+        }
+        if (closestRequest.getFileAdd() == 10000){
+            return null;
+        }
+        getRequests().removeAt(index);
+        return closestRequest;
+    }
+    
+    public Request getNextFifo(){
+        Request next = (Request) getRequests().dequeue();
+        return next;
+    }
 }
