@@ -947,20 +947,17 @@ public class Interface extends javax.swing.JFrame {
             .addGroup(panel2Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(panel2Layout.createSequentialGroup()
-                        .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addGap(137, 137, 137)
-                        .addComponent(privacy_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(panel2Layout.createSequentialGroup()
-                        .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(file_directory, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                            .addComponent(crud_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(privacy_selection, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                    .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(file_directory, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                        .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
+                        .addComponent(crud_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(36, 36, 36))
         );
         panel2Layout.setVerticalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -1075,7 +1072,7 @@ public class Interface extends javax.swing.JFrame {
         archive.setLayout(archiveLayout);
         archiveLayout.setHorizontalGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(GroupLayout.Alignment.TRAILING, archiveLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addContainerGap(50, Short.MAX_VALUE)
                 .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(archiveLayout.createSequentialGroup()
                         .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -1093,11 +1090,11 @@ public class Interface extends javax.swing.JFrame {
                         .addComponent(jLabel14, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jScrollPane9, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 793, GroupLayout.PREFERRED_SIZE))
                     .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(72, 72, 72))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
         archiveLayout.setVerticalGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(archiveLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addContainerGap(32, Short.MAX_VALUE)
                 .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addGroup(archiveLayout.createSequentialGroup()
                         .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -1117,7 +1114,7 @@ public class Interface extends javax.swing.JFrame {
                         .addComponent(jScrollPane9, GroupLayout.PREFERRED_SIZE, 125, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         selection.addTab("Administrador de archivos", archive);
@@ -1141,11 +1138,11 @@ public class Interface extends javax.swing.JFrame {
             .addGroup(panel7Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 972, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane7)
-                    .addComponent(label12, GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
-                .addContainerGap(34, Short.MAX_VALUE))
+                    .addComponent(label12, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(39, 39, 39))
         );
         panel7Layout.setVerticalGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel7Layout.createSequentialGroup()
@@ -1164,16 +1161,16 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout memory_tableLayout = new GroupLayout(memory_table);
         memory_table.setLayout(memory_tableLayout);
         memory_tableLayout.setHorizontalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(memory_tableLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(panel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGroup(GroupLayout.Alignment.TRAILING, memory_tableLayout.createSequentialGroup()
+                .addContainerGap(23, Short.MAX_VALUE)
+                .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         memory_tableLayout.setVerticalGroup(memory_tableLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(memory_tableLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap(33, Short.MAX_VALUE)
                 .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         selection.addTab("Tabla de memoria", memory_table);
@@ -1259,7 +1256,7 @@ public class Interface extends javax.swing.JFrame {
                 .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(818, Short.MAX_VALUE))
+                .addContainerGap(798, Short.MAX_VALUE))
         );
         config_panelLayout.setVerticalGroup(config_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(config_panelLayout.createSequentialGroup()
@@ -1267,7 +1264,7 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(config_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(panel5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(551, Short.MAX_VALUE))
+                .addContainerGap(553, Short.MAX_VALUE))
         );
 
         selection.addTab("Configuración", config_panel);
@@ -1275,10 +1272,10 @@ public class Interface extends javax.swing.JFrame {
         GroupLayout graphics_panelLayout = new GroupLayout(graphics_panel);
         graphics_panel.setLayout(graphics_panelLayout);
         graphics_panelLayout.setHorizontalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 1441, Short.MAX_VALUE)
+            .addGap(0, 1421, Short.MAX_VALUE)
         );
         graphics_panelLayout.setVerticalGroup(graphics_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGap(0, 723, Short.MAX_VALUE)
+            .addGap(0, 725, Short.MAX_VALUE)
         );
 
         selection.addTab("Gráficos", graphics_panel);
