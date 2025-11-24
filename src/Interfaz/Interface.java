@@ -112,6 +112,7 @@ public class Interface extends javax.swing.JFrame {
         crud_selection.add("Crear");
         crud_selection.add("Actualizar");
         crud_selection.add("Eliminar");
+        crud_selection.add("Leer");
         
         privacy_selection.add("N/A");
         privacy_selection.add("Privado");
@@ -431,90 +432,129 @@ public class Interface extends javax.swing.JFrame {
         if (null != crud_selection.getSelectedItem())
             switch (crud_selection.getSelectedItem()) {
             case "Crear" -> {
-                if (searchNodeByName(root, file_name.toString()) == null){
-                    int size = Integer.parseInt(JOptionPane.showInputDialog("Introduzca en numeros el tamaño del archivo"));
-                    Boolean privacy = null;
-                    switch (privacy_selection.getSelectedIndex()) {
-                        case 1 -> privacy = false;
-                        case 2 -> privacy = true;
-                        default -> System.out.println("Debe seleccionar una privacidad para el archivo");
-                    }
-                    
-                    if (privacy != null){
-                        File file = new File(allNodes.count()+1, file_name.toString(), size, privacy);
-                        
-                        if ((searchNodeByName(root, file_directory.toString())) != null){
-                            DefaultMutableTreeNode father = searchNodeByName(root, file_directory.toString());
-                            DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
-                            father.add(child);
-                            
-                            assignSpaceInDisk(size, file.getFileBlocks()); // Llena la lista
-                            selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
-                            addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
-                            // Falta agregar al disco
-                            System.out.println("creado");
-                        } else {
-                            System.out.println("Directorio inválido");
-                        }
-                    }
+                if (actual_mode == 1){
+                    JOptionPane.showMessageDialog(rootPane, "No se encuentra en modo administrador, esta accción no puede ser ejecutada.");
                 } else {
-                    System.out.println("No se puede crear un archivo bajo ese nombre");
+                    create();
                 }
             }
             case "Actualizar" -> {
-                String new_name = JOptionPane.showInputDialog("Introduzca el nuevo nombre del archivo: ");
-                Boolean can_update = true;
-                
-                if (!"".equals(new_name)){
-                    for (int i = 0; i < allNodes.count(); i++){
-                            DefaultMutableTreeNode aux = (DefaultMutableTreeNode)allNodes.get(i);
-                            if (aux.toString().equals(new_name)){
-                                JOptionPane.showMessageDialog(rootPane, "Ya existe un archivo con ese nombre, escoja otro.");
-                                can_update = false;
-                                break;
-                        }
-                    }
+                if (actual_mode == 1){
+                    JOptionPane.showMessageDialog(rootPane, "No se encuentra en modo administrador, esta accción no puede ser ejecutada.");
                 } else {
-                    JOptionPane.showMessageDialog(rootPane, "Debe introducir un nombre válido");
-                }
-                
-                if (can_update == true){
-                    file_name.toString();
-                    file_directory.toString(); // Realmente este no es necesario pero bueno
-                    
-                    if (searchNodeByName(root, file_name.toString()) != null){
-                        // Cambio de nombre en disco
-                        System.out.println("actualizado");
-                    } else {
-                        System.out.println("No se encontro el archivo");
-                    }
-                    
+                    update();
                 }
             }
             case "Eliminar" -> {
-                
-                if (searchNodeByName(root, file_name.toString()) != null){
-                        DefaultMutableTreeNode child = searchNodeByName(root, file_name.toString());
-                        DefaultMutableTreeNode parent = searchNodeByName(root, file_directory.toString());
-                        
-                        if (parent != null && child != null){
-                            tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
-                            // Función de eliminar archivo/directorio del disco
-                        } else {
-                            System.out.println("El archivo o el padre no existe. revise los datos");
-                        }
-                        
-                        System.out.println("eliminado");
+                if (actual_mode == 1){
+                    JOptionPane.showMessageDialog(rootPane, "No se encuentra en modo administrador, esta accción no puede ser ejecutada.");
                 } else {
-                    System.out.println("No se encontro el archivo");
+                    delete();
                 }
             }
+            case "Leer" -> {
+                read();
+            }
         }
-        
         updateTree();
         updateTable();
     }
     
+    public void create(){
+        if (searchNodeByName(root, file_name.getText()) == null){
+            int size = Integer.parseInt(JOptionPane.showInputDialog("Introduzca en numeros el tamaño del archivo"));
+            Boolean privacy = null;
+            switch (privacy_selection.getSelectedIndex()) {
+                case 1 -> privacy = false;
+                case 2 -> privacy = true;
+                default -> System.out.println("Debe seleccionar una privacidad para el archivo");
+            }
+
+            if (privacy != null){
+                File file = new File(allNodes.count()+1, file_name.getText(), size, privacy);
+
+                if ((searchNodeByName(root, file_directory.getText())) != null){
+                    DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
+                    DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
+                    father.add(child);
+
+                    assignSpaceInDisk(size, file.getFileBlocks()); // Llena la lista
+                    selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
+                    addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
+                    // Falta agregar al disco
+                    System.out.println("creado");
+                } else {
+                    System.out.println("Directorio inválido");
+                }
+            }
+        } else {
+            System.out.println("No se puede crear un archivo bajo ese nombre");
+        }
+    }
+    
+    public void delete(){
+        
+        if (searchNodeByName(root, file_name.getText()) != null){
+            DefaultMutableTreeNode child = searchNodeByName(root, file_name.getText());
+            DefaultMutableTreeNode parent = searchNodeByName(root, file_directory.getText());
+
+            if (parent != null && child != null){
+                tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
+                // Función de eliminar archivo/directorio del disco
+            } else {
+                System.out.println("El archivo o el padre no existe. revise los datos");
+            }
+
+            System.out.println("eliminado");
+        } else {
+            System.out.println("No se encontro el archivo");
+        }
+    }
+    
+    public void read(){
+        if (searchNodeByName(root, file_name.getText()) != null){
+
+        } else {
+            System.out.println("No se encontro el archivo");
+        }
+    }
+    
+    public void update(){
+    
+        String new_name = JOptionPane.showInputDialog("Introduzca el nuevo nombre del archivo: ");
+        Boolean can_update = true;
+
+        if (!"".equals(new_name)){
+            for (int i = 0; i < allNodes.count(); i++){
+                    DefaultMutableTreeNode aux = (DefaultMutableTreeNode)allNodes.get(i);
+                    if (aux.toString().equals(new_name)){
+                        JOptionPane.showMessageDialog(rootPane, "Ya existe un archivo con ese nombre, escoja otro.");
+                        can_update = false;
+                        break;
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Debe introducir un nombre válido");
+        }
+
+        if (can_update == true){
+            file_name.getText();
+            file_directory.getText(); // Realmente este no es necesario pero bueno
+            
+            DefaultMutableTreeNode node = searchNodeByName(root, file_name.getText());
+            if (node != null){
+                // Cambio de nombre en disco
+                if (node.getUserObject() instanceof File file) {
+                    file.setName(new_name);
+                    tree.nodeChanged(node);
+                }
+                System.out.println("actualizado");
+            } else {
+                System.out.println("No se encontro el archivo");
+            }
+
+        }
+    }
     
     public void buildTable(){
         int filas = 8;
@@ -1261,15 +1301,7 @@ public class Interface extends javax.swing.JFrame {
 
     private void execute_crudActionPerformed(ActionEvent evt) {//GEN-FIRST:event_execute_crudActionPerformed
         // create Process (use the correct text field for the name; set_process_name is the JTextField)
-        updateTable();
-        DefaultMutableTreeNode found = searchNodeByName(root, "main1");
-        System.out.println(found.toString());
-        if (actual_mode == 1){
-            JOptionPane.showMessageDialog(rootPane, "No se encuentra en modo administrador, esta accción no puede ser ejecutada.");
-        } else {
-            executeCrud();
-        }
-
+        executeCrud();
     }//GEN-LAST:event_execute_crudActionPerformed
 
     private void save_policyActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_policyActionPerformed
