@@ -94,4 +94,14 @@ public class File {
         return name; // lo que se mostrará en el JTree
     }
     
+    public String read(){
+        String txt = "";
+        
+        for (int i = 0; i < fileBlocks.count(); i++){
+            Block aux = (Block) fileBlocks.get(i);
+            txt += aux.getPosition()+  ": " + aux.getContent() +"\n";
+        }
+        return txt;
+    }
+    
 }
