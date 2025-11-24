@@ -84,6 +84,8 @@ public class Interface extends javax.swing.JFrame {
         setupScrollContainers();
         buildTable();
         buildTree();
+        updateTree();
+        updateTable();
     }
     
     
@@ -448,7 +450,7 @@ public class Interface extends javax.swing.JFrame {
                             
                             assignSpaceInDisk(size, file.getFileBlocks()); // Llena la lista
                             selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
-                            addToTable(file.getFileBlocks());   //Pinta dentro de la tabla
+                            addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
                             // Falta agregar al disco
                             System.out.println("creado");
                         } else {
@@ -521,6 +523,13 @@ public class Interface extends javax.swing.JFrame {
         DefaultTableModel modelo = new DefaultTableModel(filas, columnas);
         JTable tabla = new JTable(modelo);
         
+        // Inicializar la tabla con bloques vacíos
+        for (int row = 0; row < filas; row++) {
+            for (int col = 0; col < columnas; col++) {
+                modelo.setValueAt(new Block(row * columnas + col), row, col);
+            }
+        }
+        
         // Renderizador personalizado
         TableCellRenderer renderer = new TableCellRenderer() {
             @Override
@@ -570,11 +579,11 @@ public class Interface extends javax.swing.JFrame {
         
         assignSpaceInDisk(file1.getSize(), file1.getFileBlocks()); // Llena la lista
         selectSpacesInTable(file1.getFileBlocks()); //Asigna las posiciones en la tabla
-        addToTable(file1.getFileBlocks());  
+        addToTable(file1.getFileBlocks(), file1.getColor());  
         
         assignSpaceInDisk(file2.getSize(), file2.getFileBlocks()); // Llena la lista
         selectSpacesInTable(file2.getFileBlocks()); //Asigna las posiciones en la tabla
-        addToTable(file2.getFileBlocks());  
+        addToTable(file2.getFileBlocks(), file2.getColor());  
          
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); // Aparece como si fuese un archivo pero realmente es un directorio
         DefaultMutableTreeNode child1 = new DefaultMutableTreeNode(dir1); 
@@ -654,11 +663,12 @@ public class Interface extends javax.swing.JFrame {
             }
         }
         
+        System.out.println("sdwd");
         // Vuelve a pintar la tabla
         for (int i = 0; i < allNodes.count(); i++){
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) allNodes.get(i);
             if (node.getUserObject() instanceof File file){
-                addToTable(file.getFileBlocks());
+                addToTable(file.getFileBlocks(), file.getColor());
                 Block start = (Block) file.getFileBlocks().get(0);
                 Block end = (Block) file.getFileBlocks().get((file.getFileBlocks().count()-1));
                 
@@ -672,21 +682,28 @@ public class Interface extends javax.swing.JFrame {
     
     
     
-    public void addToTable(Lista blockList){
+    public void addToTable(Lista blockList, Color color){
         for (int i = 0; i < blockList.count(); i++){
             Block aux = (Block) blockList.get(i);
-            Color color = selectColors();
             aux.setColor(color);
             table_files.setValueAt(aux, aux.getX(), aux.getY());
         }
     }
     
     public void assignSpaceInDisk(int amount, Lista fileList){
-        for (int i = 0; i < amount; i++){
-            Block aux = (Block) disk.getSpaces()[i];
+        int assigned = 0;
+        Block[] spaces = disk.getSpaces();
+        for (int i = 0; i < spaces.length && assigned < amount; i++){
+            Block aux = spaces[i];
             if ("Empty".equals(aux.getContent())){
+                aux.setContent("Occupied");
                 fileList.add(aux);
+                assigned++;
             }
+        }
+        
+        if (assigned < amount) {
+            System.out.println("Not enough space in disk!");
         }
     }
     
@@ -695,8 +712,8 @@ public class Interface extends javax.swing.JFrame {
         for (int row = 0; row < table_files.getRowCount(); row++) {
             for (int column = 0; column < table_files.getColumnCount(); column++) {
                 Object valor = table_files.getValueAt(row, column);
-                if (valor instanceof Color color) {
-                    if (color == Color.WHITE){
+                if (valor instanceof Block block) {
+                    if (block.getColor().equals(Color.WHITE)){
                         if (count < blockList.count()){
                         Block aux = (Block) blockList.get(count);
                         aux.setX(row);

@@ -4,6 +4,8 @@
  */
 package EDD;
 
+import java.awt.Color;
+
 /**
  *
  * @author Eddy
@@ -15,6 +17,7 @@ public class File {
     private int size;
     private Lista fileBlocks = new Lista();
     private boolean isPublic;
+    private Color color;
     //private Lista path;
 
     public File(int id, String name, int size, boolean isPublic) {
@@ -22,7 +25,15 @@ public class File {
         this.name = name;
         this.size = size;
         this.isPublic = isPublic;
+        this.color = selectColors();
         //this.path = path;
+    }
+    
+    public Color selectColors(){
+        int r = (int)(Math.random() * 256); // 0–255
+        int g = (int)(Math.random() * 256);
+        int b = (int)(Math.random() * 256);
+        return new Color(r, g, b);
     }
 
     public String getName() {
@@ -68,6 +79,14 @@ public class File {
     */
     public boolean isPublic() {
         return isPublic;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
     
     @Override

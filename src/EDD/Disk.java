@@ -9,7 +9,7 @@ package EDD;
  * @author Eddy
  */
 public class Disk {
-    private Object[] spaces;
+    private Block[] spaces;
     private int totalBlocks;
     private int availableBlocks;
     private int headerPosition;
@@ -19,7 +19,7 @@ public class Disk {
     private Directory root;
 
     public Disk() {
-        this.spaces = new Object[64];
+        this.spaces = new Block[64];
         this.totalBlocks = 64;
         this.availableBlocks = totalBlocks;
         this.headerPosition = 0;
@@ -29,11 +29,11 @@ public class Disk {
         this.root = new Directory(0, new Lista());
     }
 
-    public Object[] getSpaces() {
+    public Block[] getSpaces() {
         return spaces;
     }
 
-    public void setSpaces(Object[] spaces) {
+    public void setSpaces(Block[] spaces) {
         this.spaces = spaces;
     }
 
