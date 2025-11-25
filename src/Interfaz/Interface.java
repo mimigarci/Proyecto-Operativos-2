@@ -61,8 +61,8 @@ public class Interface extends javax.swing.JFrame {
     private Thread schedulerThread;
     private Thread diskThread;
     private boolean isDiskActive = false;
-    private Disk disk = new Disk();
     private Lista files = new Lista();
+    private Disk disk = new Disk(files);
     private String newNameAux = "";
     private boolean privacyAux = true;
     private int sizeAux = 0;
@@ -92,6 +92,32 @@ public class Interface extends javax.swing.JFrame {
         buildTreeEmpty();
         updateTree();
         updateTable();
+        setupMenuBar();
+    }
+
+    private void setupMenuBar() {
+        javax.swing.JMenuBar menuBar = new javax.swing.JMenuBar();
+        javax.swing.JMenu fileMenu = new javax.swing.JMenu("JSON");
+        javax.swing.JMenuItem saveItem = new javax.swing.JMenuItem("Guardar estado actual");
+        javax.swing.JMenuItem loadItem = new javax.swing.JMenuItem("Cargar estado desde JSON");
+
+        saveItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JSON.JsonManager.save(Interface.this);
+            }
+        });
+
+        loadItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JSON.JsonManager.load(Interface.this);
+            }
+        });
+
+        fileMenu.add(saveItem);
+        fileMenu.add(loadItem);
+        menuBar.add(fileMenu);
+
+        this.setJMenuBar(menuBar);
     }
     
     
@@ -442,6 +468,30 @@ public class Interface extends javax.swing.JFrame {
     private void startDiskBackground() {
         if (disk.getRequests().getCount() > 0) {
             Request request = disk.manageRequests();
+            Proceso process = findProcessById(request.getProcessId());
+            
+            int size = 0;
+            if (process.getCrud() == 0){
+                size = process.getSize();
+            } else {
+                int i = 0;
+                File actFile = null;
+                while (i < files.count()){
+                    actFile = (File) files.get(i);
+                    if (request.getFile().equals(((File)files.get(i)).getName())){
+                        actFile = (File)files.get(i);
+                        break;
+                    } else {
+                        i++;
+                    }
+                }
+                size = actFile.getSize();
+            }
+            
+            if (size > 0){
+                disk.setHeaderPosition(request.getFileAdd()+size);
+            }
+            System.out.println("header at: " + disk.getHeaderPosition());
             attendCrud(request);
         }
         
@@ -469,7 +519,7 @@ public class Interface extends javax.swing.JFrame {
                 }
                 // sleep between scheduler ticks, allow interruption to break early
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException ex) {
                     // preserve interrupt status and exit loop
                     Thread.currentThread().interrupt();
@@ -550,20 +600,20 @@ public class Interface extends javax.swing.JFrame {
         
         switch (process.getCrud()) {
             case 0:
-                attendCreate(process);
+                attendCreate(process, request.getFileAdd());
                 break;
             case 1:
-                attendUpdate(process);
+                attendUpdate(process, request.getFileAdd());
                 break;
             case 2:
-                attendDelete(process);
+                attendDelete(process, request.getFileAdd());
                 break;
             case 3:
-                attendRead(process);
+                attendRead(process, request.getFileAdd());
                 break;
         }
         
-        
+                
         int index = operativeSystem.getBlockedQueue().getQueue().indexOf(process.getPcb());
         if (index != -1) {
             operativeSystem.getBlockedQueue().removeAt(index);
@@ -620,7 +670,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void attendCreate(Proceso process){
+    public void attendCreate(Proceso process, int address){
         
         File file = new File(allNodes.count()+1, process.getFile(), process.getSize(), process.isPrivacy());
                     
@@ -635,7 +685,10 @@ public class Interface extends javax.swing.JFrame {
                 addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
                 tree.insertNodeInto(child, father, father.getChildCount());
                 allNodes = getAllNodes(root); // Update allNodes after adding to tree
-                show_terminated1.setText("Se ha creado el elemento exitosamente.");
+                
+                String msg = "proceso: "+process.getPcb().getName()+"\narchivo: "+process.getFile()+"\ndireccion indicada: "+address;
+                
+                show_terminated1.setText("Se ha creado el elemento exitosamente.\n"+msg);
             }// Llena la lista
 
         } else {
@@ -662,35 +715,60 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void attendDelete(Proceso process){
+    public void attendDelete(Proceso process, int address){
         
         DefaultMutableTreeNode child = searchNodeByName(root, process.getFile());
-        DefaultMutableTreeNode parent = searchNodeByName(root, process.getDirectory());
         
-        tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
+        String msg = "proceso: "+process.getPcb().getName()+"\narchivo: "+process.getFile()+"\ndireccion indicada: "+address;
+        show_terminated1.setText("Se ha eliminado el elemento exitosamente.\n"+msg);
+              
+        
+        deleteChildren(child);
+    }
+    
+    public void deleteChildren(DefaultMutableTreeNode root){
+        if (root.getUserObject() instanceof File file) {
+            if (file.getSize() > 0){
+                int i = 0;
+                while (i < file.getFileBlocks().count()){
+                    ((Block)file.getFileBlocks().get(i)).setContent("Empty");
+                    i++;
+                }
+            } else {
+                for (int i = 0; i < root.getChildCount(); i++) {
+                    DefaultMutableTreeNode hijo = (DefaultMutableTreeNode) root.getChildAt(i);
+                    deleteChildren(hijo);
+                }
+            }
+
+        }
+        tree.removeNodeFromParent(root); //Esto elimina el nodo y sus hijos
         jTree1.updateUI(); // Refresh the tree display
     }
     
     public void read(){
         if (searchNodeByName(root, file_name.getText()) != null && searchNodeByName(root, file_directory.getText()) != null){
-                       
             sendProcess();
         } else {
             show_terminated1.setText("No se encontró el archivo o el directorio referenciado.");
         }
     }
     
-    public void attendRead(Proceso process){
+    public void attendRead(Proceso process, int address){
         
         File aux = (File) searchNodeByName(root, process.getFile()).getUserObject();
         if (!aux.isIsPublic()){
             if (actual_mode == 0){
-                show_terminated1.setText(aux.read());
+                String msg = "proceso: "+process.getPcb().getName()+"\narchivo: "+process.getFile()+"\ndireccion indicada: "+address;
+                
+                show_terminated1.setText(msg + "\n" + aux.read());
             } else {
                 show_terminated1.setText("No posee permisos para leer este archivo");
             }
         } else {
-            show_terminated1.setText(aux.read());
+            String msg = "proceso: "+process.getPcb().getName()+"\narchivo: "+process.getFile()+"\ndireccion indicada: "+address;
+                
+            show_terminated1.setText(msg + "\n" + aux.read());
         }
     }
     
@@ -718,7 +796,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void attendUpdate(Proceso process) {
+    public void attendUpdate(Proceso process, int address) {
         
         
         file_name.getText();
@@ -731,7 +809,8 @@ public class Interface extends javax.swing.JFrame {
                 file.setName(process.getUpdtMsg());
                 tree.nodeChanged(node);
             }
-            show_terminated1.setText("Se ha actualizado el archivo.");
+            String msg = "proceso: "+process.getPcb().getName()+"\narchivo: "+process.getFile()+"\ndireccion indicada: "+address;
+            show_terminated1.setText("Se ha actualizado el archivo.\n"+msg);
         } else {
             show_terminated1.setText("No se encontró el archivo.");
         }
@@ -935,7 +1014,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
  
-    private void updateTable(){
+    public void updateTable(){
         allNodes = getAllNodes(root);
         String txt = ""; 
         
@@ -981,13 +1060,19 @@ public class Interface extends javax.swing.JFrame {
     
     public Boolean assignSpaceInDisk(int amount, Lista fileList){
         int assigned = 0;
+        int first = 0;
         Block[] spaces = disk.getSpaces();
         for (int i = 0; i < spaces.length && assigned < amount; i++){
             Block aux = spaces[i];
             if ("Empty".equals(aux.getContent())){
-                aux.setContent("Occupied");
-                fileList.add(aux);
+                if (assigned == 0){
+                    first = i;
+                }
                 assigned++;
+            } else {
+                if (assigned < amount){
+                    assigned = 0;                
+                }
             }
         }
         
@@ -995,19 +1080,32 @@ public class Interface extends javax.swing.JFrame {
             show_terminated1.setText("No hay suficiente espacio en disco!");
             return false;
         } else {
+            for (int i = first; i < first+amount; i++){
+                Block aux = spaces[i];
+                System.out.println(aux.getPosition()+" esta aqui");
+                aux.setContent("Occupied");
+                fileList.add(aux);
+            }                
             return true;
         }
     }
     
     public void selectSpacesInTable(Lista blockList){
         int count = 0;
+        Block aux = null;
         for (int row = 0; row < table_files.getRowCount(); row++) {
             for (int column = 0; column < table_files.getColumnCount(); column++) {
                 Object valor = table_files.getValueAt(row, column);
                 if (valor instanceof Block block) {
-                    if (block.getColor().equals(Color.WHITE)){
+                    
+                    if (count < blockList.count()){
+                        aux = (Block) blockList.get(count);
+                    } else {
+                            break;
+                    }
+                    if (block.getColor().equals(Color.WHITE) && row == (int)(aux.getPosition()/8) && column == (int)(aux.getPosition()%8)){
                         if (count < blockList.count()){
-                        Block aux = (Block) blockList.get(count);
+                        
                         aux.setX(row);
                         aux.setY(column);
                         count++;
@@ -1608,6 +1706,7 @@ public class Interface extends javax.swing.JFrame {
     private void save_policyActionPerformed(ActionEvent evt) {//GEN-FIRST:event_save_policyActionPerformed
         // TODO add your handling code here:
         planification = planification_choose.getSelectedIndex();
+        disk.setPlanification(planification);
         //startSchedulerBackground();
     }//GEN-LAST:event_save_policyActionPerformed
 
@@ -1728,6 +1827,46 @@ public class Interface extends javax.swing.JFrame {
      */
     public void setActual_mode(int actual_mode) {
         this.actual_mode = actual_mode;
+    }
+
+    public Disk getDisk() {
+        return disk;
+    }
+
+    public void setDisk(Disk disk) {
+        this.disk = disk;
+    }
+
+    public DefaultMutableTreeNode getRoot() {
+        return root;
+    }
+
+    public void setRoot(DefaultMutableTreeNode root) {
+        this.root = root;
+    }
+
+    public DefaultTreeModel getTreeModel() {
+        return tree;
+    }
+
+    public void setTreeModel(DefaultTreeModel tree) {
+        this.tree = tree;
+    }
+
+    public Lista getFiles() {
+        return files;
+    }
+
+    public void setFiles(Lista files) {
+        this.files = files;
+    }
+    
+    public void setAllNodes(Lista allNodes) {
+        this.allNodes = allNodes;
+    }
+
+    public JTree getJTreeComponent() {
+        return jTree1;
     }
 
 }

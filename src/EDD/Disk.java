@@ -16,8 +16,9 @@ public class Disk {
     private int direction;
     private int planification;
     private Cola requests;
+    private Lista files;
 
-    public Disk() {
+    public Disk(Lista files) {
         this.spaces = new Block[64];
         this.totalBlocks = 64;
         this.availableBlocks = totalBlocks;
@@ -25,6 +26,7 @@ public class Disk {
         this.direction = 0;
         this.planification = 0;
         this.requests = new Cola();
+        this.files = files;
     }
 
     public Block[] getSpaces() {
@@ -82,7 +84,15 @@ public class Disk {
     public void setRequests(Cola requests) {
         this.requests = requests;
     }    
-    
+
+    public Lista getFiles() {
+        return files;
+    }
+
+    public void setFiles(Lista files) {
+        this.files = files;
+    }
+        
     public void switchDirection() {
         if (getDirection() == 1){
             setDirection(-1);
@@ -112,6 +122,9 @@ public class Disk {
                 requestToAttend = getClosestSsft();
                 break;
         }
+        if (requestToAttend.getFileAdd() == -1){
+            requestToAttend.setFileAdd(estimateLocation(requestToAttend));
+        }
         return requestToAttend;
     }
     
@@ -119,12 +132,19 @@ public class Disk {
         int i = 0;
         int index = -1;
         int closest = 100;
+        int estimate;
         int current;
-        Request closestRequest = new Request(10000, "", 10000);
+        Request closestRequest = new Request(10000, "", 10000, 0);
         Request currentRequest;
         while (i < getRequests().getCount()) {
-            if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
-                current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
+            if (((Request) getRequests().get(i)).getFileAdd() == -1){
+                estimate = estimateLocation(((Request) getRequests().get(i)));
+            } else {
+                estimate = ((Request) getRequests().get(i)).getFileAdd();
+            }
+            if (getHeaderPosition() <= estimate){
+                
+                current = estimate - getHeaderPosition();
                 currentRequest = (Request) getRequests().get(i);
                 if (current < closest){
                     closest = current;
@@ -132,7 +152,7 @@ public class Disk {
                     index = i;
                 }
             } else {
-                current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
+                current = getHeaderPosition() - estimate;
                 currentRequest = (Request) getRequests().get(i);
                 if (current < closest){
                     closest = current;
@@ -153,13 +173,19 @@ public class Disk {
         int i = 0;
         int index = -1;
         int closest = 100;
+        int estimate;
         int current;
-        Request closestRequest = new Request(10000, "", 10000);
+        Request closestRequest = new Request(10000, "", 10000, 0);
         Request currentRequest;
         while (i < getRequests().getCount()) {
+            if (((Request) getRequests().get(i)).getFileAdd() == -1){
+                estimate = estimateLocation(((Request) getRequests().get(i)));
+            } else {
+                estimate = ((Request) getRequests().get(i)).getFileAdd();
+            }
             if (getDirection() == 1) {
-                if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
-                    current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
+                if (getHeaderPosition() <= estimate){
+                    current = estimate - getHeaderPosition();
                     currentRequest = (Request) getRequests().get(i);
                     if (current < closest){
                         closest = current;
@@ -168,8 +194,8 @@ public class Disk {
                     }
                 }
             } else {
-                if (getHeaderPosition() > ((Request) getRequests().get(i)).getFileAdd()){
-                    current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
+                if (getHeaderPosition() >= estimate){
+                    current = getHeaderPosition() - estimate;
                     currentRequest = (Request) getRequests().get(i);
                     if (current < closest){
                         closest = current;
@@ -184,28 +210,33 @@ public class Disk {
             switchDirection();
             i = 0;
             while (i < getRequests().getCount()) {
-            if (getDirection() == 1) {
-                if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
-                    current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
-                    currentRequest = (Request) getRequests().get(i);
-                    if (current < closest){
-                        closest = current;
-                        closestRequest = currentRequest;
-                        index = i;
+                if (((Request) getRequests().get(i)).getFileAdd() == -1){
+                    estimate = estimateLocation(((Request) getRequests().get(i)));
+                } else {
+                    estimate = ((Request) getRequests().get(i)).getFileAdd();
+                }
+                if (getDirection() == 1) {
+                    if (getHeaderPosition() <= estimate){
+                        current = estimate - getHeaderPosition();
+                        currentRequest = (Request) getRequests().get(i);
+                        if (current < closest){
+                            closest = current;
+                            closestRequest = currentRequest;
+                            index = i;
+                        }
+                    }
+                } else {
+                    if (getHeaderPosition() >= estimate){
+                        current = getHeaderPosition() - estimate;
+                        currentRequest = (Request) getRequests().get(i);
+                        if (current < closest){
+                            closest = current;
+                            closestRequest = currentRequest;
+                            index = i;
+                        }
                     }
                 }
-            } else {
-                if (getHeaderPosition() > ((Request) getRequests().get(i)).getFileAdd()){
-                    current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
-                    currentRequest = (Request) getRequests().get(i);
-                    if (current < closest){
-                        closest = current;
-                        closestRequest = currentRequest;
-                        index = i;
-                    }
-                }
-            }
-            i++;
+                i++;
             }
         }
         if (closestRequest.getFileAdd() == 10000){
@@ -220,12 +251,18 @@ public class Disk {
         int index = -1;
         int closestFront = 100;
         int farthestBack = -1;
+        int estimate;
         int current;
-        Request closestRequest = new Request(10000, "", 10000);
+        Request closestRequest = new Request(10000, "", 10000, 0);
         Request currentRequest;
         while (i < getRequests().getCount()) {
-            if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
-                current = ((Request) getRequests().get(i)).getFileAdd() - getHeaderPosition();
+            if (((Request) getRequests().get(i)).getFileAdd() == -1){
+                estimate = estimateLocation(((Request) getRequests().get(i)));
+            } else {
+                estimate = ((Request) getRequests().get(i)).getFileAdd();
+            }
+            if (getHeaderPosition() <= estimate){
+                current = estimate - getHeaderPosition();
                 currentRequest = (Request) getRequests().get(i);
                 if (current < closestFront){
                     closestFront = current;
@@ -238,16 +275,21 @@ public class Disk {
         if (closestRequest.getFileAdd() == 10000){
             i = 0;
             while (i < getRequests().getCount()) {
-            if (getHeaderPosition() > ((Request) getRequests().get(i)).getFileAdd()){
-                current = getHeaderPosition() - ((Request) getRequests().get(i)).getFileAdd();
-                currentRequest = (Request) getRequests().get(i);
-                if (current > farthestBack){
-                    farthestBack = current;
-                    closestRequest = currentRequest;
-                    index = i;
+                if (((Request) getRequests().get(i)).getFileAdd() == -1){
+                    estimate = estimateLocation(((Request) getRequests().get(i)));
+                } else {
+                    estimate = ((Request) getRequests().get(i)).getFileAdd();
                 }
-            }
-            i++;
+                if (getHeaderPosition() >= estimate){
+                    current = getHeaderPosition() - estimate;
+                    currentRequest = (Request) getRequests().get(i);
+                    if (current > farthestBack){
+                        farthestBack = current;
+                        closestRequest = currentRequest;
+                        index = i;
+                    }
+                }
+                i++;
             }
         }
         if (closestRequest.getFileAdd() == 10000){
@@ -260,5 +302,33 @@ public class Disk {
     public Request getNextFifo(){
         Request next = (Request) getRequests().dequeue();
         return next;
+    }
+    
+    public int estimateLocation(Request request){
+               
+        
+        int amount = request.getSize();
+        int assigned = 0;
+        int first = 0;
+        Block[] spaces = getSpaces();
+        for (int i = 0; i < spaces.length && assigned < amount; i++){
+            Block aux = spaces[i];
+            if ("Empty".equals(aux.getContent())){
+                if (assigned == 0){
+                    first = i;
+                }
+                assigned++;
+            } else {
+                if (assigned < amount){
+                    assigned = 0;                
+                }
+            }
+        }
+        if (amount > 0){
+            return first+1;
+        } else {
+            return getHeaderPosition();
+        }
+        
     }
 }
