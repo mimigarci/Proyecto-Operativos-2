@@ -69,7 +69,6 @@ public class Interface extends javax.swing.JFrame {
     
     private JTable table_files;
     private Lista allNodes = new Lista();
-    private Lista allProcesses = new Lista();
     private DefaultMutableTreeNode root;
     private DefaultTreeModel tree;
     private javax.swing.JPanel readyContainer;           // for jScrollPane3 (Cola de Listos)
@@ -424,12 +423,19 @@ public class Interface extends javax.swing.JFrame {
     }
     
     
-    private void sendProcess(){
-        File aux = (File) (searchNodeByName(root, file_name.getText())).getUserObject();
-        
-        Proceso defaultP = new Proceso(allProcesses.count(), "CRUD Execution", crud_selection.getSelectedIndex(), aux.getId());
-        defaultP.getPcb().setStatus("ready");
-        addPanelProceso(defaultP);
+    private Boolean sendProcess(){
+        try {
+            Lista aux = operativeSystem.getProcessList();
+            Proceso defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex());
+            aux.add(defaultP);
+            operativeSystem.setProcessList(aux);
+            defaultP.getPcb().setStatus("ready");
+            addPanelProceso(defaultP);
+            return true;
+        } catch (Exception evt){
+            show_terminated1.setText("Error al crear el proceso.");
+            return false;
+        }
     }
     
     
@@ -459,7 +465,9 @@ public class Interface extends javax.swing.JFrame {
                 }
             }
             case "Leer" -> {
-                read();
+                if (sendProcess() == true){
+                    read();
+                }
             }
         }
         updateTree();
@@ -469,22 +477,27 @@ public class Interface extends javax.swing.JFrame {
     public void create(){
         if (searchNodeByName(root, file_name.getText()) == null){
             int size;
-            try {
-                size = Integer.parseInt(JOptionPane.showInputDialog("Introduzca en numeros el tamaño del archivo"));
-            } catch (Exception evt) {
-                show_terminated1.setText("Debe introducir una cantidad válida");
-                return;
-            }
             
-            // Validate file size
-            if (size <= 0) {
-                show_terminated1.setText("El tamaño del archivo debe ser mayor a 0.");
-                return;
-            }
-            
-            if (size > 64) {
-                show_terminated1.setText("El tamaño del archivo no puede exceder 64 bloques.");
-                return;
+            if (type_selection.getSelectedIndex() == 0){
+                try {
+                    size = Integer.parseInt(JOptionPane.showInputDialog("Introduzca en numeros el tamaño del archivo"));
+                } catch (Exception evt) {
+                    show_terminated1.setText("Debe introducir una cantidad válida");
+                    return;
+                }
+                
+                // Validate file size
+                if (size <= 0) {
+                    show_terminated1.setText("El tamaño del archivo debe ser mayor a 0.");
+                    return;
+                }
+
+                if (size > 64) {
+                    show_terminated1.setText("El tamaño del archivo no puede exceder 64 bloques.");
+                    return;
+                }
+            } else {
+                size = 0;
             }
 
             Boolean privacy = null;
@@ -495,25 +508,28 @@ public class Interface extends javax.swing.JFrame {
             }
 
             if (privacy != null){
-                File file = new File(allNodes.count()+1, file_name.getText(), size, privacy);
+                
+                if (sendProcess() == true){
+                    File file = new File(allNodes.count()+1, file_name.getText(), size, privacy);
 
-                if ((searchNodeByName(root, file_directory.getText())) != null){
-                    DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
-                    DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
-                    
-                    if (assignSpaceInDisk(size, file.getFileBlocks()) == true) {
-                        selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
-                        addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
-                        tree.insertNodeInto(child, father, father.getChildCount());
-                        show_terminated1.setText("Se ha creado el archivo exitosamente.");
-                    }// Llena la lista
-                    
-                } else {
-                    show_terminated1.setText("El directorio no existe.");
+                    if ((searchNodeByName(root, file_directory.getText())) != null){
+                        DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
+                        DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
+
+                        if (assignSpaceInDisk(size, file.getFileBlocks()) == true) {
+                            selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
+                            addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
+                            tree.insertNodeInto(child, father, father.getChildCount());
+                            show_terminated1.setText("Se ha creado el elmento exitosamente.");
+                        }// Llena la lista
+
+                    } else {
+                        show_terminated1.setText("El directorio no existe.");
+                    }
                 }
             }
         } else {
-            show_terminated1.setText("No se puede crear un archivo bajo ese nombre. Por favor escoja otro.");
+            show_terminated1.setText("No se puede crear un elemento bajo ese nombre. Por favor escoja otro.");
         }
     }
     
@@ -524,8 +540,10 @@ public class Interface extends javax.swing.JFrame {
             DefaultMutableTreeNode parent = searchNodeByName(root, file_directory.getText());
 
             if (parent != null && child != null){
-                tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
-                jTree1.updateUI(); // Refresh the tree display
+                if (sendProcess() == true) {
+                    tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
+                    jTree1.updateUI(); // Refresh the tree display
+                }
                 // Función de eliminar archivo/directorio del disco
             } else {
                 show_terminated1.setText("El archivo o el directorio referenciados no existen.");
@@ -541,16 +559,17 @@ public class Interface extends javax.swing.JFrame {
         if (searchNodeByName(root, file_name.getText()) != null && searchNodeByName(root, file_directory.getText()) != null){
             File aux = (File) searchNodeByName(root, file_name.getText()).getUserObject();
             
-            if (!aux.isIsPublic()){
-                if (actual_mode == 0){
-                    show_terminated1.setText(aux.read());
+            if (sendProcess() == true){
+                if (!aux.isIsPublic()){
+                    if (actual_mode == 0){
+                        show_terminated1.setText(aux.read());
+                    } else {
+                        show_terminated1.setText("No posee permisos para leer este archivo");
+                    }
                 } else {
-                    show_terminated1.setText("No posee permisos para leer este archivo");
+                    show_terminated1.setText(aux.read());
                 }
-            } else {
-                show_terminated1.setText(aux.read());
             }
-            
         } else {
             show_terminated1.setText("No se encontró el archivo o el directorio referenciado.");
         }
@@ -575,21 +594,22 @@ public class Interface extends javax.swing.JFrame {
         }
 
         if (can_update == true){
-            file_name.getText();
-            file_directory.getText(); // Realmente este no es necesario pero bueno
-            
-            DefaultMutableTreeNode node = searchNodeByName(root, file_name.getText());
-            if (node != null){
-                // Cambio de nombre en disco
-                if (node.getUserObject() instanceof File file) {
-                    file.setName(new_name);
-                    tree.nodeChanged(node);
-                }
-                show_terminated1.setText("Se ha actualizado el archivo.");
-            } else {
-                show_terminated1.setText("No se encontró el archivo.");
-            }
+            if (sendProcess() == true){
+                file_name.getText();
+                file_directory.getText(); // Realmente este no es necesario pero bueno
 
+                DefaultMutableTreeNode node = searchNodeByName(root, file_name.getText());
+                if (node != null){
+                    // Cambio de nombre en disco
+                    if (node.getUserObject() instanceof File file) {
+                        file.setName(new_name);
+                        tree.nodeChanged(node);
+                    }
+                    show_terminated1.setText("Se ha actualizado el archivo.");
+                } else {
+                    show_terminated1.setText("No se encontró el archivo.");
+                }
+            }
         }
     }
     
@@ -827,6 +847,43 @@ public class Interface extends javax.swing.JFrame {
     }
     
     public void updateTree(){
+        // Create a filtered tree based on permissions
+        DefaultMutableTreeNode filteredRoot = filterTreeByPermissions(root);
+        
+        // Update the tree model with the filtered tree
+        DefaultTreeModel model = new DefaultTreeModel(filteredRoot);
+        jTree1.setModel(model);
+        jTree1.updateUI();
+    }
+    
+    private DefaultMutableTreeNode filterTreeByPermissions(DefaultMutableTreeNode node) {
+        if (node == null) return null;
+        
+        Object userObject = node.getUserObject();
+        
+        // Check if this node should be visible
+        if (userObject instanceof File) {
+            File file = (File) userObject;
+            // If in user mode (actual_mode == 1) and file is private, skip this node
+            if (actual_mode == 1 && !file.isIsPublic()) {
+                return null; // Don't include this node
+            }
+        }
+        
+        // Create a copy of the current node
+        DefaultMutableTreeNode filteredNode = new DefaultMutableTreeNode(userObject);
+        
+        // Recursively filter children
+        for (int i = 0; i < node.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
+            DefaultMutableTreeNode filteredChild = filterTreeByPermissions(child);
+            
+            if (filteredChild != null) {
+                filteredNode.add(filteredChild);
+            }
+        }
+        
+        return filteredNode;
     }
     
     /**
@@ -1359,6 +1416,7 @@ public class Interface extends javax.swing.JFrame {
             setActual_mode(0);
             execution_mode.setText("Admin");
         }
+        updateTree();
     }//GEN-LAST:event_save_modeActionPerformed
 
     private void generate_filesActionPerformed(ActionEvent evt) {//GEN-FIRST:event_generate_filesActionPerformed

@@ -11,19 +11,18 @@ package EDD;
 public class Proceso{
     private PCB pcb;
     private int crud;
-    private int fileId;
+    //private int fileId;
 
 
-    public Proceso(int id, String name, int crud, int fileId) {
+    public Proceso(int id, String name, int crud) {
         this.pcb = new PCB(id, name);
         this.crud = crud;
-        this.fileId = fileId;
     }
 
     public Proceso(PCB pcb, int crud) {
         this.pcb = pcb;
         this.crud = crud;
-        this.fileId = 1000000000;
+        //this.fileId = 1000000000;
     }
 
     public int getCrud() {
@@ -34,6 +33,7 @@ public class Proceso{
         this.crud = crud;
     }
 
+    /*
     public int getFileId() {
         return fileId;
     }
@@ -41,7 +41,7 @@ public class Proceso{
     public void setFileId(int fileId) {
         this.fileId = fileId;
     }  
-    
+    */
     public PCB getPcb() {
         return pcb;
     }

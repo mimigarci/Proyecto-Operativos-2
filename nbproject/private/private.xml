@@ -3,10 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< Updated upstream
             <file>file:/C:/Users/Eddy/Documents/Luis/Metro/Sistemas%20Operativos/Proyecto%202/ProyectoOperativos2/src/EDD/Block.java</file>
             <file>file:/C:/Users/Eddy/Documents/Luis/Metro/Sistemas%20Operativos/Proyecto%202/ProyectoOperativos2/src/EDD/Disk.java</file>
             <file>file:/C:/Users/Eddy/Documents/Luis/Metro/Sistemas%20Operativos/Proyecto%202/ProyectoOperativos2/src/EDD/File.java</file>
             <file>file:/C:/Users/Eddy/Documents/Luis/Metro/Sistemas%20Operativos/Proyecto%202/ProyectoOperativos2/src/EDD/Directory.java</file>
+=======
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/main/main.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/Interfaz/PanelProceso.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/Proceso.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/Lista.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/File.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/Request.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/Disk.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/Block.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/ElementoLista.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/OS.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/Directory.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/EDD/Scheduler.java</file>
+            <file>file:/C:/Users/miche_ysmoa6e/Documents/Operativos/Proyecto%20Operativos%202/Proyecto-Operativos-2/src/Interfaz/Interface.java</file>
+>>>>>>> Stashed changes
         </group>
     </open-files>
 </project-private>
