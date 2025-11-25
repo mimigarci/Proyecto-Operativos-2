@@ -13,14 +13,15 @@ public class Request {
     private String fileId;
     private int fileAdd;
     private String updtMsg;
+    private int size;
 
-    public Request(int processId, String fileId, int fileAdd) {
+    public Request(int processId, String fileId, int fileAdd, int size) {
         this.processId = processId;
         this.fileId = fileId;
         this.fileAdd = fileAdd;
     }
 
-    public Request(int processId, String fileId, int fileAdd, String updtMsg) {
+    public Request(int processId, String fileId, int fileAdd, String updtMsg, int size) {
         this.processId = processId;
         this.fileId = fileId;
         this.fileAdd = fileAdd;
@@ -58,5 +59,13 @@ public class Request {
     public void setUpdtMsg(String updtMsg) {
         this.updtMsg = updtMsg;
     }
-    
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+   
 }

@@ -61,8 +61,8 @@ public class Interface extends javax.swing.JFrame {
     private Thread schedulerThread;
     private Thread diskThread;
     private boolean isDiskActive = false;
-    private Disk disk = new Disk();
     private Lista files = new Lista();
+    private Disk disk = new Disk(files);
     private String newNameAux = "";
     private boolean privacyAux = true;
     private int sizeAux = 0;
@@ -442,22 +442,31 @@ public class Interface extends javax.swing.JFrame {
     private void startDiskBackground() {
         if (disk.getRequests().getCount() > 0) {
             Request request = disk.manageRequests();
+            Proceso process = findProcessById(request.getProcessId());
+            
+            int size = 0;
+            if (process.getCrud() == 0){
+                size = process.getSize();
+            } else {
+                int i = 0;
+                File actFile = null;
+                while (i < files.count()){
+                    actFile = (File) files.get(i);
+                    if (request.getFile().equals(((File)files.get(i)).getName())){
+                        actFile = (File)files.get(i);
+                        break;
+                    } else {
+                        i++;
+                    }
+                }
+                size = actFile.getSize();
+            }
+            
+            if (size > 0){
+                disk.setHeaderPosition(request.getFileAdd()+size);
+            }
+            System.out.println("header at: " + disk.getHeaderPosition());
             attendCrud(request);
-            int i = 0;
-            File actFile = null;
-            while (i < files.count()){
-                actFile = (File) files.get(i);
-                if (request.getFile().equals(((File)files.get(i)).getName())){
-                    actFile = (File)files.get(i);
-                    break;
-                } else {
-                    i++;
-                } 
-            }
-            if (actFile.getSize() > 0){
-                disk.setHeaderPosition(request.getFileAdd()+actFile.getSize()-1);
-                System.out.println("header at: " + disk.getHeaderPosition());
-            }
         }
         
         // only after scheduler finishes, post minimal UI updates to EDT:

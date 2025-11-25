@@ -76,14 +76,14 @@ public class Scheduler {
     public Request generateRequest(Proceso toRun, File actFile) {
         Request newRequest;
         if (toRun.getCrud() == 1){
-            newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition(), toRun.getUpdtMsg());
+            newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition(), toRun.getUpdtMsg(), toRun.getSize());
         } else if (toRun.getCrud() == 0){
-            newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), -1);
+            newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), -1, toRun.getSize());
         } else {
             if (actFile.getSize() > 0){
-                newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition());
+                newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition(), toRun.getSize());
             } else {
-                newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), 0);
+                newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), 0, toRun.getSize());
             }
         }
         return newRequest;
