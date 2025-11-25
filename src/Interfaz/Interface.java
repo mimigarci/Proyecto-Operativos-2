@@ -69,6 +69,7 @@ public class Interface extends javax.swing.JFrame {
     
     private JTable table_files;
     private Lista allNodes = new Lista();
+    private Lista allProcesses = new Lista();
     private DefaultMutableTreeNode root;
     private DefaultTreeModel tree;
     private javax.swing.JPanel readyContainer;           // for jScrollPane3 (Cola de Listos)
@@ -120,12 +121,16 @@ public class Interface extends javax.swing.JFrame {
         execution_mode_select.add("Modo usuario");
         execution_mode_select.add("Modo administrador");
         
+        type_selection.add("Archivo");
+        type_selection.add("Directorio");
+        
         planification_choose.add("FIFO"); //0
         planification_choose.add("SCAN"); //1
         planification_choose.add("C-SCAN"); //2
         planification_choose.add("SSTF"); //3
         
-        
+        registerQueueListeners(); 
+        startSchedulerThread();
     }
     
     private void registerQueueListeners() {
@@ -257,15 +262,7 @@ public class Interface extends javax.swing.JFrame {
     }
     
     private JPanel getContainerForStatus(String status) {
-        
-        /*
-        boolean suspendedReady = status.contains("suspendedReady") ;
-        boolean suspendedBlocked = status.contains("suspendedBlocked") ;
-        boolean blocked = status.contains("blocked");
-        boolean ready = status.contains("ready") ;
-        */
-        
-
+      
         // blocked (but not suspended) -> blockedContainer
         if (status.equals("blocked")) {
             if (blockedContainer == null) setupScrollContainers();
@@ -425,6 +422,16 @@ public class Interface extends javax.swing.JFrame {
         }
         super.dispose();
     }
+    
+    
+    private void sendProcess(){
+        File aux = (File) (searchNodeByName(root, file_name.getText())).getUserObject();
+        
+        Proceso defaultP = new Proceso(allProcesses.count(), "CRUD Execution", crud_selection.getSelectedIndex(), aux.getId());
+        defaultP.getPcb().setStatus("ready");
+        addPanelProceso(defaultP);
+    }
+    
     
     private void executeCrud(){
     
@@ -744,11 +751,16 @@ public class Interface extends javax.swing.JFrame {
         for (int i = 0; i < allNodes.count(); i++){
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) allNodes.get(i);
             if (node.getUserObject() instanceof File file){
-                addToTable(file.getFileBlocks(), file.getColor());
-                Block start = (Block) file.getFileBlocks().get(0);
-                Block end = (Block) file.getFileBlocks().get((file.getFileBlocks().count()-1));
+                File aux = (File) node.getUserObject();
                 
-                txt += "\n" + file.getName() + ". Inicio: " + start.getX() + ", "+ start.getY() + ", Fin: " + end.getX() + ", " + end.getY(); 
+                if (aux.getSize() != 0) {
+                    addToTable(file.getFileBlocks(), file.getColor());
+                    Block start = (Block) file.getFileBlocks().get(0);
+                    Block end = (Block) file.getFileBlocks().get((file.getFileBlocks().count()-1));
+
+                    txt += "\n" + file.getName() + ". Inicio: " + start.getX() + ", "+ start.getY() + ", Fin: " + end.getX() + ", " + end.getY(); 
+                }
+                
             }
         }
         
@@ -846,6 +858,8 @@ public class Interface extends javax.swing.JFrame {
         label11 = new Label();
         label13 = new Label();
         privacy_selection = new Choice();
+        type_selection = new Choice();
+        label14 = new Label();
         jLabel3 = new JLabel();
         jLabel14 = new JLabel();
         panel3 = new Panel();
@@ -968,13 +982,19 @@ public class Interface extends javax.swing.JFrame {
 
         label11.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
         label11.setForeground(new Color(51, 51, 51));
-        label11.setText("Nombre del directorio");
+        label11.setText("Directorio principal");
 
         label13.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
         label13.setForeground(new Color(51, 51, 51));
         label13.setText("Privacidad");
 
         privacy_selection.setForeground(new Color(51, 51, 51));
+
+        type_selection.setForeground(new Color(51, 51, 51));
+
+        label14.setFont(new Font("Segoe UI", 0, 12)); // NOI18N
+        label14.setForeground(new Color(51, 51, 51));
+        label14.setText("Tipo de archivo");
 
         GroupLayout panel2Layout = new GroupLayout(panel2);
         panel2.setLayout(panel2Layout);
@@ -990,20 +1010,26 @@ public class Interface extends javax.swing.JFrame {
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(label10, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(label11, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(label13, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label14, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(privacy_selection, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                     .addComponent(file_directory, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                     .addComponent(file_name, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
-                    .addComponent(crud_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(crud_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(type_selection, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(36, 36, 36))
         );
         panel2Layout.setVerticalGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panel2Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel2)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(type_selection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(label14, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(label9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(crud_selection, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -1429,6 +1455,7 @@ public class Interface extends javax.swing.JFrame {
     private Label label11;
     private Label label12;
     private Label label13;
+    private Label label14;
     private Label label9;
     private Panel memory_table;
     private Panel panel1;
@@ -1447,6 +1474,7 @@ public class Interface extends javax.swing.JFrame {
     private JTextArea show_actual1;
     private JTextArea show_terminated;
     private JTextArea show_terminated1;
+    private Choice type_selection;
     // End of variables declaration//GEN-END:variables
 
     /**

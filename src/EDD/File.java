@@ -13,7 +13,7 @@ import java.awt.Color;
 public class File {
     private String name;
     private int id;
-    private int size;
+    private int size = 0;
     private Lista fileBlocks = new Lista();
     private boolean isPublic;
     private Color color;
