@@ -59,6 +59,8 @@ public class Interface extends javax.swing.JFrame {
     private int planification;
     private boolean isSchedulerActive = false;
     private Thread schedulerThread;
+    private Thread diskThread;
+    private boolean isDiskActive = false;
     private Disk disk = new Disk();
     private Lista files = new Lista();
     private String newNameAux = "";
@@ -135,6 +137,7 @@ public class Interface extends javax.swing.JFrame {
         
         registerQueueListeners(); 
         startSchedulerThread();
+        startDiskThread();
     }
     
     private void registerQueueListeners() {
@@ -359,23 +362,10 @@ public class Interface extends javax.swing.JFrame {
     
     
     private void startSchedulerBackground() {
-        /*
-        int selected = planification; // read atomic/volatile if planification can change concurrently
-        //System.out.println(selected);
         if (operativeSystem.getReadyQueue().getCount() > 0) {
-            switch (selected) {
-                case 0 -> {
-                    operativeSystem.executeRoundRobin();
-                    //System.out.println("xddddddddddd");
-                }
-                case 1 -> operativeSystem.executePriorityPlanification();
-                case 2 -> operativeSystem.executeSPN();
-                case 3 -> operativeSystem.executeFeedback();
-                case 4 -> operativeSystem.executeFSS();
-                case 5 -> operativeSystem.executeSRT();
-            }
+            operativeSystem.getScheduler().manageProcess(operativeSystem.getReadyQueue(), operativeSystem.getBlockedQueue(), disk.getRequests(), files);
         }
-        */
+        
         // only after scheduler finishes, post minimal UI updates to EDT:
         javax.swing.SwingUtilities.invokeLater(() -> {
             // refresh all relevant lists with the correct queues
@@ -427,6 +417,47 @@ public class Interface extends javax.swing.JFrame {
         super.dispose();
     }
     
+    private void startDiskBackground() {
+        if (operativeSystem.getReadyQueue().getCount() > 0) {
+            Request request = disk.manageRequests();
+            attendCrud(request);
+        }
+        
+        // only after scheduler finishes, post minimal UI updates to EDT:
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            // refresh all relevant lists with the correct queues
+            refreshReadyList(operativeSystem.getReadyQueue());
+            refreshBlockedList(operativeSystem.getBlockedQueue());
+            updateActualProcess();
+            updateTerminatedArea();
+        });
+    }
+    
+    private void startDiskThread() {
+        
+        if (diskThread != null && diskThread.isAlive()) return;
+        diskThread = new Thread(() -> {
+            // run until interrupted (dispose() will interrupt)
+            //System.out.println("ssss");
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    startDiskBackground();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+                // sleep between scheduler ticks, allow interruption to break early
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    // preserve interrupt status and exit loop
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }, "DiskThread");
+        diskThread.setDaemon(true);
+        diskThread.start();
+        isDiskActive = true;
+    }
     
     private Boolean sendProcess(){
         try {
@@ -490,6 +521,31 @@ public class Interface extends javax.swing.JFrame {
         updateTable();
     }
     
+    public void attendCrud(Request request){
+        
+        Proceso process = findProcessById(request.getProcessId());
+        
+        switch (process.getCrud()) {
+            case 0:
+                attendCreate(process);
+                break;
+            case 1:
+                attendUpdate(process);
+                break;
+            case 2:
+                attendDelete(process);
+                break;
+            case 3:
+                attendRead(process);
+                break;
+        }
+        
+        operativeSystem.getBlockedQueue().removeValue(process);
+        process.getPcb().setStatus("terminated");
+        operativeSystem.getTerminatedProcessList().add(process);
+        
+    }
+    
     public void create(){
         if (searchNodeByName(root, file_name.getText()) == null){
             int size;
@@ -533,9 +589,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void attendCreate(Request request){
-        
-        Proceso process = findProcessById(request.getProcessId());
+    public void attendCreate(Proceso process){
         
         File file = new File(allNodes.count()+1, process.getFile(), process.getSize(), process.isPrivacy());
                     
@@ -576,9 +630,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void attendDelete(Request request){
-
-        Proceso process = findProcessById(request.getProcessId());
+    public void attendDelete(Proceso process){
         
         DefaultMutableTreeNode child = searchNodeByName(root, process.getFile());
         DefaultMutableTreeNode parent = searchNodeByName(root, process.getDirectory());
@@ -596,9 +648,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void attendRead(Request request){
-        
-        Proceso process = findProcessById(request.getProcessId());
+    public void attendRead(Proceso process){
         
         File aux = (File) searchNodeByName(root, process.getFile()).getUserObject();
         if (!aux.isIsPublic()){
@@ -636,9 +686,8 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
-    public void attendUpdate(Request request) {
+    public void attendUpdate(Proceso process) {
         
-        Proceso process = findProcessById(request.getProcessId());
         
         file_name.getText();
         file_directory.getText(); // Realmente este no es necesario pero bueno

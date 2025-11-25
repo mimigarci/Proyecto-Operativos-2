@@ -91,49 +91,28 @@ public class Disk {
         }
     }
     
-    public void manageRequests(){
-        while (getRequests().getCount() > 0){
-            Request requestToAttend = null;
-            switch (getPlanification()) {
-            //FIFO
-                case 0:
-                    requestToAttend = getNextFifo();
+    public Request manageRequests(){
 
-            //SCAN
-                case 1:
-                    requestToAttend = getClosestScan();
-                    
-            //C-SCAN
-                case 2:
-                    requestToAttend = getClosestCscan();
-                    
-            //SSTF
-                case 3:
-                    requestToAttend = getClosestSsft();
-                    
-            }
-            if (requestToAttend == null) {
+        Request requestToAttend = null;
+        switch (getPlanification()) {
+        //FIFO
+            case 0:
+                requestToAttend = getNextFifo();
                 break;
-            }
-            switch (getPlanification()) {
-            //FIFO
-                case 0:
-                    requestToAttend = getNextFifo();
-
-            //SCAN
-                case 1:
-                    requestToAttend = getClosestScan();
-                    
-            //C-SCAN
-                case 2:
-                    requestToAttend = getClosestCscan();
-                    
-            //SSTF
-                case 3:
-                    requestToAttend = getClosestSsft();
-                    
-            }
+        //SCAN
+            case 1:
+                requestToAttend = getClosestScan();
+                break;
+        //C-SCAN
+            case 2:
+                requestToAttend = getClosestCscan();
+                break;
+        //SSTF
+            case 3:
+                requestToAttend = getClosestSsft();
+                break;
         }
+        return requestToAttend;
     }
     
     public Request getClosestSsft() {
