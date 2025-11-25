@@ -18,7 +18,9 @@ public class File {
     private boolean isPublic;
     private Color color;
     private boolean isFile;
-
+    private String colorRGB;
+    
+   
     public File(int id, String name, int size, boolean isPublic) {
         this.id = id;
         this.name = name;
@@ -26,6 +28,14 @@ public class File {
         this.isPublic = isPublic;
         this.color = selectColors();
         this.isFile = true;
+        
+        if (getColor() != null){
+            int red = color.getRed();
+            int green = color.getGreen();
+            int blue = color.getBlue();
+
+            colorRGB = "RGB(" + red + ", " + green + ", " + blue + ")";
+        }
     }
 
     public File(int id, String name, boolean isPublic) {
@@ -100,6 +110,8 @@ public class File {
         }
         return txt;
     }
+    
+    
 
     /**
      * @return the isPublic
@@ -114,5 +126,13 @@ public class File {
     public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
+
+    /**
+     * @return the colorRGB
+     */
+    public String getColorRGB() {
+        return colorRGB;
+    }
+    
     
 }

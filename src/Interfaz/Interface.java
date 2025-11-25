@@ -96,23 +96,45 @@ public class Interface extends javax.swing.JFrame {
     
     
     private void setupScrollContainers() {
-        // Use FlowLayout left-aligned so panels are placed side-by-side and aligned left
-        readyContainer = new javax.swing.JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        // Use a custom WrapLayout that wraps to next line instead of expanding horizontally
+        readyContainer = new javax.swing.JPanel() {
+            @Override
+            public java.awt.Dimension getPreferredSize() {
+                java.awt.Dimension d = super.getPreferredSize();
+                java.awt.Container parent = getParent();
+                if (parent != null && parent instanceof javax.swing.JViewport) {
+                    d.width = parent.getWidth();
+                }
+                return d;
+            }
+        };
+        readyContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 8));
         readyContainer.setOpaque(true);
 
-        blockedContainer = new javax.swing.JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        blockedContainer = new javax.swing.JPanel() {
+            @Override
+            public java.awt.Dimension getPreferredSize() {
+                java.awt.Dimension d = super.getPreferredSize();
+                java.awt.Container parent = getParent();
+                if (parent != null && parent instanceof javax.swing.JViewport) {
+                    d.width = parent.getWidth();
+                }
+                return d;
+            }
+        };
+        blockedContainer.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 8));
         blockedContainer.setOpaque(true);
 
 
         if (jScrollPane3 != null) {
             jScrollPane3.setViewportView(readyContainer);
             jScrollPane3.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            jScrollPane3.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            jScrollPane3.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Prevent horizontal scroll
         }
         if (jScrollPane9 != null) {
             jScrollPane9.setViewportView(blockedContainer);
             jScrollPane9.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-            jScrollPane9.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            jScrollPane9.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); // Prevent horizontal scroll
         }
         
         crud_selection.add("Crear");
@@ -517,6 +539,9 @@ public class Interface extends javax.swing.JFrame {
                 }
             }
         }
+        
+        updateTable();
+        updateTree();
     }
     
     public void attendCrud(Request request){
@@ -538,10 +563,16 @@ public class Interface extends javax.swing.JFrame {
                 break;
         }
         
-        int index = operativeSystem.getBlockedQueue().getQueue().indexOf(process);
-        operativeSystem.getBlockedQueue().removeAt(index);
+        
+        int index = operativeSystem.getBlockedQueue().getQueue().indexOf(process.getPcb());
+        if (index != -1) {
+            operativeSystem.getBlockedQueue().removeAt(index);
+        }
+        
         process.getPcb().setStatus("terminated");
         operativeSystem.getTerminatedProcessList().add(process);
+        
+        // Update tree and table AFTER the file has been created and process terminated
         updateTree();
         updateTable();
     }
@@ -595,15 +626,16 @@ public class Interface extends javax.swing.JFrame {
                     
         files.add(file);
 
-        if ((searchNodeByName(root, file_directory.getText())) != null){
-            DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
+        if ((searchNodeByName(root, process.getDirectory())) != null){
+            DefaultMutableTreeNode father = searchNodeByName(root, process.getDirectory());
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
 
             if (assignSpaceInDisk(process.getSize(), file.getFileBlocks()) == true) {
                 selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
                 addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
                 tree.insertNodeInto(child, father, father.getChildCount());
-                show_terminated1.setText("Se ha creado el elmento exitosamente.");
+                allNodes = getAllNodes(root); // Update allNodes after adding to tree
+                show_terminated1.setText("Se ha creado el elemento exitosamente.");
             }// Llena la lista
 
         } else {
@@ -775,35 +807,72 @@ public class Interface extends javax.swing.JFrame {
     }
     
     private void buildTree(){
-        File main_dir = new File(allNodes.count()+1, "Archivos", true);
+        // Clear existing data before creating new tree
+        if (root != null) {
+            // Clear the tree
+            root.removeAllChildren();
+            tree.reload();
+        }
+        
+        // Clear the table (reset all blocks)
+        if (table_files != null) {
+            DefaultTableModel modelo = (DefaultTableModel) table_files.getModel();
+            int filas = modelo.getRowCount();
+            int columnas = modelo.getColumnCount();
+            for (int row = 0; row < filas; row++) {
+                for (int col = 0; col < columnas; col++) {
+                    Block block = new Block(row * columnas + col);
+                    modelo.setValueAt(block, row, col);
+                }
+            }
+        }
+        
+        // Clear files list
+        files = new Lista();
+        
+        // Clear disk spaces
+        Block[] spaces = disk.getSpaces();
+        for (int i = 0; i < spaces.length; i++) {
+            spaces[i].setContent("Empty");
+        }
+        
+        // Create root directory directly (only the root, no process needed)
+        File main_dir = new File(0, "Archivos", true);
         files.add(main_dir);
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); 
-        
-        for (int i = 1; i <= 10; i++) {
-            File dir = new File(allNodes.count()+1, "Proyecto_" + i, true);
-            File file = new File(allNodes.count()+2, "main_" + i, 4, true); // Size 4 to fit 10 files (40 blocks) in 64
-            
-            files.add(dir);
-            files.add(file);
-            
-            assignSpaceInDisk(file.getSize(), file.getFileBlocks()); 
-            selectSpacesInTable(file.getFileBlocks()); 
-            addToTable(file.getFileBlocks(), file.getColor());
-            
-            DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(dir);
-            DefaultMutableTreeNode fileNode = new DefaultMutableTreeNode(file);
-                        
-            dirNode.add(fileNode);
-            newRoot.add(dirNode);
-        }
         
         root = newRoot;
         DefaultTreeModel model = new DefaultTreeModel(root);
         tree = model;
         allNodes = getAllNodes(root);
-        
         jTree1.setModel(model);
-        updateTable();
+        
+        // Update tree to show only root directory initially
+        updateTree();
+        
+        // First, create processes for all directories (they will be processed first due to FIFO)
+        for (int i = 1; i <= 10; i++) {
+            Lista aux = operativeSystem.getProcessList();
+            Proceso dirProcess = new Proceso(aux.count(), "CRUD Execution", 0, "Proyecto_" + i, "Archivos", 0, true);
+            aux.add(dirProcess);
+            operativeSystem.setProcessList(aux);
+            operativeSystem.getReadyQueue().enqueue(dirProcess.getPcb());
+            dirProcess.getPcb().setStatus("ready");
+            addPanelProceso(dirProcess);
+        }
+        
+        // Then create processes for all files (they will be processed after directories)
+        for (int i = 1; i <= 10; i++) {
+            Lista aux = operativeSystem.getProcessList();
+            Proceso fileProcess = new Proceso(aux.count(), "CRUD Execution", 0, "main_" + i, "Proyecto_" + i, 4, true);
+            aux.add(fileProcess);
+            operativeSystem.setProcessList(aux);
+            operativeSystem.getReadyQueue().enqueue(fileProcess.getPcb());
+            fileProcess.getPcb().setStatus("ready");
+            addPanelProceso(fileProcess);
+        }
+        
+        // Do NOT call updateTree() here - directories and files will appear as processes complete
     }
     
     private void buildTreeEmpty(){
@@ -890,7 +959,7 @@ public class Interface extends javax.swing.JFrame {
                     Block start = (Block) file.getFileBlocks().get(0);
                     Block end = (Block) file.getFileBlocks().get((file.getFileBlocks().count()-1));
 
-                    txt += "\n" + file.getName() + ". Inicio: " + start.getX() + ", "+ start.getY() + ", Fin: " + end.getX() + ", " + end.getY(); 
+                    txt += "\n" + file.getName() + ". Inicio: " + start.getX() + ", "+ start.getY() + ", Fin: " + end.getX() + ", " + end.getY()+", " + file.getColorRGB(); 
                 }
                 
             }
@@ -1331,9 +1400,9 @@ public class Interface extends javax.swing.JFrame {
                 .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addGroup(archiveLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                         .addComponent(jLabel3, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3)
                         .addComponent(jLabel14, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane9, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 793, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane9, GroupLayout.PREFERRED_SIZE, 793, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane3))
                     .addComponent(panel9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
