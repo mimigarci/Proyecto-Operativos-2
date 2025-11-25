@@ -80,7 +80,11 @@ public class Scheduler {
         } else if (toRun.getCrud() == 0){
             newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), -1);
         } else {
-            newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition());
+            if (actFile.getSize() > 0){
+                newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition());
+            } else {
+                newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), 0);
+            }
         }
         return newRequest;
     }
