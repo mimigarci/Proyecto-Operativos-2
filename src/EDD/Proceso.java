@@ -11,15 +11,36 @@ package EDD;
 public class Proceso{
     private PCB pcb;
     private int crud;
+    private int fileId;
 
 
-
-    public Proceso(int id, String name, int crud) {
+    public Proceso(int id, String name, int crud, int fileId) {
         this.pcb = new PCB(id, name);
+        this.crud = crud;
+        this.fileId = fileId;
+    }
+
+    public Proceso(PCB pcb, int crud) {
+        this.pcb = pcb;
+        this.crud = crud;
+        this.fileId = 1000000000;
+    }
+
+    public int getCrud() {
+        return crud;
+    }
+
+    public void setCrud(int crud) {
         this.crud = crud;
     }
 
-    
+    public int getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(int fileId) {
+        this.fileId = fileId;
+    }  
     
     public PCB getPcb() {
         return pcb;

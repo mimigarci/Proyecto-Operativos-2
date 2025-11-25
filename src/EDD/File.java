@@ -13,12 +13,11 @@ import java.awt.Color;
 public class File {
     private String name;
     private int id;
-    private int depth;
     private int size;
     private Lista fileBlocks = new Lista();
     private boolean isPublic;
     private Color color;
-    //private Lista path;
+    private boolean isFile;
 
     public File(int id, String name, int size, boolean isPublic) {
         this.id = id;
@@ -26,7 +25,14 @@ public class File {
         this.size = size;
         this.isPublic = isPublic;
         this.color = selectColors();
-        //this.path = path;
+        this.isFile = true;
+    }
+
+    public File(int id, String name, boolean isPublic) {
+        this.name = name;
+        this.id = id;
+        this.isPublic = isPublic;
+        this.isFile = false;
     }
     
     public Color selectColors(){
@@ -68,15 +74,6 @@ public class File {
         this.fileBlocks = fileBlocks;
     }
 
-    /*
-    public Lista getPath() {
-        return path;
-    }
-
-    public void setPath(Lista path) {
-        this.path = path;
-    }
-    */
     public boolean isPublic() {
         return isIsPublic();
     }
