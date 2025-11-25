@@ -53,12 +53,14 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class Interface extends javax.swing.JFrame {
 
-    private OS operativeSystem = new OS(4000, 4);
+    private OS operativeSystem = new OS();
     private Timer terminatedTimer, timeTimer;
     private int planification;
     private boolean isSchedulerActive = false;
     private Thread schedulerThread;
     private Disk disk = new Disk();
+    private Lista files = new Lista();
+    private String newNameAux = "";
     private int actual_mode = 0; //0 ---> administrador, 1 ---> usuario
     
    // private Lista devices = operativeSystem.getDeviceTable();    //---> No creo que sea necesario, se accede directamente a lo que está dentro del sistema operativo
@@ -426,8 +428,14 @@ public class Interface extends javax.swing.JFrame {
     private Boolean sendProcess(){
         try {
             Lista aux = operativeSystem.getProcessList();
-            Proceso defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex());
+            Proceso defaultP;
+            if (crud_selection.getSelectedIndex() == 1) {
+                defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText(), newNameAux);
+            } else {
+                defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText());
+            }            
             aux.add(defaultP);
+            operativeSystem.getReadyQueue().enqueue(defaultP.getPcb());
             operativeSystem.setProcessList(aux);
             defaultP.getPcb().setStatus("ready");
             addPanelProceso(defaultP);
@@ -511,6 +519,8 @@ public class Interface extends javax.swing.JFrame {
                 
                 if (sendProcess() == true){
                     File file = new File(allNodes.count()+1, file_name.getText(), size, privacy);
+                    
+                    files.add(file);
 
                     if ((searchNodeByName(root, file_directory.getText())) != null){
                         DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
@@ -594,6 +604,7 @@ public class Interface extends javax.swing.JFrame {
         }
 
         if (can_update == true){
+            this.newNameAux = new_name;
             if (sendProcess() == true){
                 file_name.getText();
                 file_directory.getText(); // Realmente este no es necesario pero bueno
@@ -669,11 +680,15 @@ public class Interface extends javax.swing.JFrame {
     
     private void buildTree(){
         File main_dir = new File(allNodes.count()+1, "Archivos", true);
+        files.add(main_dir);
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); 
         
         for (int i = 1; i <= 10; i++) {
             File dir = new File(allNodes.count()+1, "Proyecto_" + i, true);
             File file = new File(allNodes.count()+2, "main_" + i, 4, true); // Size 4 to fit 10 files (40 blocks) in 64
+            
+            files.add(dir);
+            files.add(file);
             
             assignSpaceInDisk(file.getSize(), file.getFileBlocks()); 
             selectSpacesInTable(file.getFileBlocks()); 
@@ -681,7 +696,7 @@ public class Interface extends javax.swing.JFrame {
             
             DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(dir);
             DefaultMutableTreeNode fileNode = new DefaultMutableTreeNode(file);
-            
+                        
             dirNode.add(fileNode);
             newRoot.add(dirNode);
         }
@@ -698,6 +713,8 @@ public class Interface extends javax.swing.JFrame {
     private void buildTreeEmpty(){
         File main_dir = new File(allNodes.count()+1, "Archivos", true);
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); 
+        
+        files.add(main_dir);
         
         root = newRoot;
         DefaultTreeModel model = new DefaultTreeModel(root);
@@ -752,8 +769,7 @@ public class Interface extends javax.swing.JFrame {
             findNodes(child, lista);
         }
     }
-
-    
+ 
     private void updateTable(){
         allNodes = getAllNodes(root);
         String txt = ""; 

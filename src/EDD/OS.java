@@ -16,7 +16,7 @@ public class OS {
     private Cola blockedQueue = new Cola();
     private Lista terminatedProcessList = new Lista();
 
-    
+
     
     public Cola fillReadyQueue(){
         // Llena readyQueue con los procesos cuyo PCB.status == "ready"
@@ -33,7 +33,7 @@ public class OS {
         return getReadyQueue();
     }
 
-    public OS(int memorySpace, int quantum) {
+    public OS() {
         this.scheduler = new Scheduler(processList);
         
     }
@@ -49,84 +49,7 @@ public class OS {
         return null;
     }
     
-    /*
-    
-    public boolean canBeReady(Proceso process){
-        // compute potential remaining space without mutating state
-        int potential = getRemainingSpace() - process.getMemorySpace();
-
-        // allow exact fit (change to >0 if you prefer strictly positive)
-        if (potential >= 0) {
-            // commit the subtraction only when we accept the process
-            this.setRemainingSpace(potential);
-            process.getPcb().setStatus("ready");
-            System.out.println("si");
-            return true;
-        } else {
-            System.out.println("no");
-            // do NOT change remainingSpace here
-            return false;
-        }
-    }
-
-    public void executePriorityPlanification() {
-        scheduler.reorganicePriorityPlanification(readyQueue, priorityList);
-        scheduler.PriorityPlanification(quantum, readyQueue, dispatcher, priorityList, blockedQueue, terminatedProcessList);
-    }
-
-    public void executeSPN() {
-        scheduler.reorganiceSPN(readyQueue);
-        scheduler.SPN(readyQueue, dispatcher, blockedQueue, terminatedProcessList);
-    }
-
-    public void executeFeedback() {
-        scheduler.reorganiceFeedback(readyQueue, priorityList);
-        scheduler.Feedback(quantum, readyQueue, feedbackList, dispatcher, blockedQueue, terminatedProcessList);
-    }
-
-    public void executeFSS() {
-    // Build priority buckets first (this may add Cola objects to priorityList)
-    scheduler.reorganicePriorityPlanification(readyQueue, priorityList);
-
-    int priorities = scheduler.getPriorities(readyQueue);
-    // iterate deterministically over existing priority buckets
-        for (int i = 0; i < priorities; i++) {
-            Object bucket = null;
-            try {
-                bucket = priorityList.get(i);
-            } catch (Exception ex) {
-                // defensive: if priorityList is shorter than expected, skip the bucket
-                continue;
-            }
-            if (!(bucket instanceof Cola)) continue;
-            Cola col = (Cola) bucket;
-            if (col.getCount() == 0) continue;
-
-            Object first = col.get(0);
-            if (!(first instanceof PCB)) continue;
-            int priority = ((PCB) first).getPriority();
-
-            // recompute FSS metrics only for this priority
-            scheduler.recalculateFSS(readyQueue, priority);
-        }
-
-        // reorder the ready queue using the computed FSS metric
-        scheduler.reorganiceFSS(readyQueue);
-
-        // run the FSS scheduling tick
-        scheduler.FSS(quantum, readyQueue, dispatcher, blockedQueue, terminatedProcessList);
-    }
-
-    public void executeSRT() {
-        scheduler.reorganiceSRT(readyQueue);
-        scheduler.SRT(readyQueue, dispatcher, blockedQueue, terminatedProcessList);
-    }
-    
-    public void executeRoundRobin(){
-        System.out.println(terminatedProcessList);
-        scheduler.RoundRobin(quantum, readyQueue, dispatcher, blockedQueue, terminatedProcessList);
-    }
-    
+        
     /**
      * @return the processList
      */

@@ -19,5 +19,68 @@ public class Scheduler {
         this.processList = processList;
     }
     
-  
+    public void manageProcess (Cola readyQueue, Cola blockedQueue, Cola requestsQueue, Lista files){
+         
+        if (readyQueue.getCount() > 0){
+
+            var processToActivate = readyQueue.dequeue();
+            if (!(processToActivate instanceof PCB)) {
+                // defensive: if the queue didn't contain a PCB, nothing to do
+                return;
+            }
+            PCB pcbOfActiveProcess = (PCB) processToActivate;
+            int i = 0;
+            Proceso toRun = null;
+            while (i < processList.count()){
+                toRun = (Proceso)processList.get(i);
+                if (pcbOfActiveProcess.getId() == ((Proceso)processList.get(i)).getPcb().getId()){
+                    toRun = (Proceso)processList.get(i);
+                    break;
+                } else {
+                    i++;
+                } 
+            }
+        
+            toRun.getPcb().setStatus("running");
+            
+            if (toRun == null) return;
+            
+            try {
+                Thread.sleep(1000);
+            } 
+            catch(InterruptedException e) {
+                 // honor interruption — set flag and return
+                 Thread.currentThread().interrupt();
+                 return;
+            }
+            
+            i = 0;
+            File actFile = null;
+            while (i < files.count()){
+                actFile = (File) files.get(i);
+                if (toRun.getFile().equals(((File)files.get(i)).getName())){
+                    actFile = (File)files.get(i);
+                    break;
+                } else {
+                    i++;
+                } 
+            }
+            
+            toRun.getPcb().setStatus("blocked");
+            blockedQueue.enqueue(toRun.getPcb());
+            Request newRequest = generateRequest(toRun, actFile);           
+            requestsQueue.enqueue(newRequest);
+        }
+    }
+    
+    public Request generateRequest(Proceso toRun, File actFile) {
+        Request newRequest;
+        if (toRun.getCrud() == 1){
+            newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition(), toRun.getUpdtMsg());
+        } else {
+            newRequest = new Request(toRun.getPcb().getId(), actFile.getName(), ((Block)actFile.getFileBlocks().get(0)).getPosition());
+        }
+        return newRequest;
+    }
+    
 }

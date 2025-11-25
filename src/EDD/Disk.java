@@ -141,7 +141,7 @@ public class Disk {
         int index = -1;
         int closest = 100;
         int current;
-        Request closestRequest = new Request(10000, 10000, 10000);
+        Request closestRequest = new Request(10000, "", 10000);
         Request currentRequest;
         while (i < getRequests().getCount()) {
             if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
@@ -175,7 +175,7 @@ public class Disk {
         int index = -1;
         int closest = 100;
         int current;
-        Request closestRequest = new Request(10000, 10000, 10000);
+        Request closestRequest = new Request(10000, "", 10000);
         Request currentRequest;
         while (i < getRequests().getCount()) {
             if (getDirection() == 1) {
@@ -242,7 +242,7 @@ public class Disk {
         int closestFront = 100;
         int farthestBack = -1;
         int current;
-        Request closestRequest = new Request(10000, 10000, 10000);
+        Request closestRequest = new Request(10000, "", 10000);
         Request currentRequest;
         while (i < getRequests().getCount()) {
             if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
