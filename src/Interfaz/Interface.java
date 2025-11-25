@@ -92,6 +92,32 @@ public class Interface extends javax.swing.JFrame {
         buildTreeEmpty();
         updateTree();
         updateTable();
+        setupMenuBar();
+    }
+
+    private void setupMenuBar() {
+        javax.swing.JMenuBar menuBar = new javax.swing.JMenuBar();
+        javax.swing.JMenu fileMenu = new javax.swing.JMenu("JSON");
+        javax.swing.JMenuItem saveItem = new javax.swing.JMenuItem("Guardar estado actual");
+        javax.swing.JMenuItem loadItem = new javax.swing.JMenuItem("Cargar estado desde JSON");
+
+        saveItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JSON.JsonManager.save(Interface.this);
+            }
+        });
+
+        loadItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JSON.JsonManager.load(Interface.this);
+            }
+        });
+
+        fileMenu.add(saveItem);
+        fileMenu.add(loadItem);
+        menuBar.add(fileMenu);
+
+        this.setJMenuBar(menuBar);
     }
     
     
@@ -988,7 +1014,7 @@ public class Interface extends javax.swing.JFrame {
         }
     }
  
-    private void updateTable(){
+    public void updateTable(){
         allNodes = getAllNodes(root);
         String txt = ""; 
         
@@ -1801,6 +1827,46 @@ public class Interface extends javax.swing.JFrame {
      */
     public void setActual_mode(int actual_mode) {
         this.actual_mode = actual_mode;
+    }
+
+    public Disk getDisk() {
+        return disk;
+    }
+
+    public void setDisk(Disk disk) {
+        this.disk = disk;
+    }
+
+    public DefaultMutableTreeNode getRoot() {
+        return root;
+    }
+
+    public void setRoot(DefaultMutableTreeNode root) {
+        this.root = root;
+    }
+
+    public DefaultTreeModel getTreeModel() {
+        return tree;
+    }
+
+    public void setTreeModel(DefaultTreeModel tree) {
+        this.tree = tree;
+    }
+
+    public Lista getFiles() {
+        return files;
+    }
+
+    public void setFiles(Lista files) {
+        this.files = files;
+    }
+    
+    public void setAllNodes(Lista allNodes) {
+        this.allNodes = allNodes;
+    }
+
+    public JTree getJTreeComponent() {
+        return jTree1;
     }
 
 }
