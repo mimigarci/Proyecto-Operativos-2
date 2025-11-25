@@ -13,6 +13,7 @@ import EDD.PCB;
 import EDD.Proceso;
 import EDD.OS;
 import EDD.QueueChangeListener;
+import EDD.Request;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Component;
@@ -61,6 +62,8 @@ public class Interface extends javax.swing.JFrame {
     private Disk disk = new Disk();
     private Lista files = new Lista();
     private String newNameAux = "";
+    private boolean privacyAux = true;
+    private int sizeAux = 0;
     private int actual_mode = 0; //0 ---> administrador, 1 ---> usuario
     
    // private Lista devices = operativeSystem.getDeviceTable();    //---> No creo que sea necesario, se accede directamente a lo que está dentro del sistema operativo
@@ -429,11 +432,16 @@ public class Interface extends javax.swing.JFrame {
         try {
             Lista aux = operativeSystem.getProcessList();
             Proceso defaultP;
-            if (crud_selection.getSelectedIndex() == 1) {
-                defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText(), newNameAux);
-            } else {
-                defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText());
-            }            
+            switch (crud_selection.getSelectedIndex()) {
+                case 1:
+                    defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText(), newNameAux);
+                    break;
+                case 0:defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText(), sizeAux, privacyAux);
+                    break;
+                default:            
+                    defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText());
+                    break;
+            }
             aux.add(defaultP);
             operativeSystem.getReadyQueue().enqueue(defaultP.getPcb());
             operativeSystem.setProcessList(aux);
@@ -516,30 +524,36 @@ public class Interface extends javax.swing.JFrame {
             }
 
             if (privacy != null){
-                
-                if (sendProcess() == true){
-                    File file = new File(allNodes.count()+1, file_name.getText(), size, privacy);
-                    
-                    files.add(file);
-
-                    if ((searchNodeByName(root, file_directory.getText())) != null){
-                        DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
-                        DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
-
-                        if (assignSpaceInDisk(size, file.getFileBlocks()) == true) {
-                            selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
-                            addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
-                            tree.insertNodeInto(child, father, father.getChildCount());
-                            show_terminated1.setText("Se ha creado el elmento exitosamente.");
-                        }// Llena la lista
-
-                    } else {
-                        show_terminated1.setText("El directorio no existe.");
-                    }
-                }
+                this.sizeAux = size;
+                this.privacyAux = privacy;
+                sendProcess();
             }
         } else {
             show_terminated1.setText("No se puede crear un elemento bajo ese nombre. Por favor escoja otro.");
+        }
+    }
+    
+    public void attendCreate(Request request){
+        
+        Proceso process = findProcessById(request.getProcessId());
+        
+        File file = new File(allNodes.count()+1, process.getFile(), process.getSize(), process.isPrivacy());
+                    
+        files.add(file);
+
+        if ((searchNodeByName(root, file_directory.getText())) != null){
+            DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
+
+            if (assignSpaceInDisk(process.getSize(), file.getFileBlocks()) == true) {
+                selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
+                addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
+                tree.insertNodeInto(child, father, father.getChildCount());
+                show_terminated1.setText("Se ha creado el elmento exitosamente.");
+            }// Llena la lista
+
+        } else {
+            show_terminated1.setText("El directorio no existe.");
         }
     }
     
@@ -550,10 +564,7 @@ public class Interface extends javax.swing.JFrame {
             DefaultMutableTreeNode parent = searchNodeByName(root, file_directory.getText());
 
             if (parent != null && child != null){
-                if (sendProcess() == true) {
-                    tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
-                    jTree1.updateUI(); // Refresh the tree display
-                }
+                sendProcess();
                 // Función de eliminar archivo/directorio del disco
             } else {
                 show_terminated1.setText("El archivo o el directorio referenciados no existen.");
@@ -565,23 +576,39 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
+    public void attendDelete(Request request){
+
+        Proceso process = findProcessById(request.getProcessId());
+        
+        DefaultMutableTreeNode child = searchNodeByName(root, process.getFile());
+        DefaultMutableTreeNode parent = searchNodeByName(root, process.getDirectory());
+        
+        tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
+        jTree1.updateUI(); // Refresh the tree display
+    }
+    
     public void read(){
         if (searchNodeByName(root, file_name.getText()) != null && searchNodeByName(root, file_directory.getText()) != null){
-            File aux = (File) searchNodeByName(root, file_name.getText()).getUserObject();
-            
-            if (sendProcess() == true){
-                if (!aux.isIsPublic()){
-                    if (actual_mode == 0){
-                        show_terminated1.setText(aux.read());
-                    } else {
-                        show_terminated1.setText("No posee permisos para leer este archivo");
-                    }
-                } else {
-                    show_terminated1.setText(aux.read());
-                }
-            }
+                       
+            sendProcess();
         } else {
             show_terminated1.setText("No se encontró el archivo o el directorio referenciado.");
+        }
+    }
+    
+    public void attendRead(Request request){
+        
+        Proceso process = findProcessById(request.getProcessId());
+        
+        File aux = (File) searchNodeByName(root, process.getFile()).getUserObject();
+        if (!aux.isIsPublic()){
+            if (actual_mode == 0){
+                show_terminated1.setText(aux.read());
+            } else {
+                show_terminated1.setText("No posee permisos para leer este archivo");
+            }
+        } else {
+            show_terminated1.setText(aux.read());
         }
     }
     
@@ -605,23 +632,43 @@ public class Interface extends javax.swing.JFrame {
 
         if (can_update == true){
             this.newNameAux = new_name;
-            if (sendProcess() == true){
-                file_name.getText();
-                file_directory.getText(); // Realmente este no es necesario pero bueno
-
-                DefaultMutableTreeNode node = searchNodeByName(root, file_name.getText());
-                if (node != null){
-                    // Cambio de nombre en disco
-                    if (node.getUserObject() instanceof File file) {
-                        file.setName(new_name);
-                        tree.nodeChanged(node);
-                    }
-                    show_terminated1.setText("Se ha actualizado el archivo.");
-                } else {
-                    show_terminated1.setText("No se encontró el archivo.");
-                }
-            }
+            sendProcess();
         }
+    }
+    
+    public void attendUpdate(Request request) {
+        
+        Proceso process = findProcessById(request.getProcessId());
+        
+        file_name.getText();
+        file_directory.getText(); // Realmente este no es necesario pero bueno
+
+        DefaultMutableTreeNode node = searchNodeByName(root, process.getFile());
+        if (node != null){
+            // Cambio de nombre en disco
+            if (node.getUserObject() instanceof File file) {
+                file.setName(process.getUpdtMsg());
+                tree.nodeChanged(node);
+            }
+            show_terminated1.setText("Se ha actualizado el archivo.");
+        } else {
+            show_terminated1.setText("No se encontró el archivo.");
+        }
+    }
+    
+    public Proceso findProcessById (int id) {
+        int i = 0;
+        Proceso process = null;
+        while (i < operativeSystem.getProcessList().count()){
+            process = (Proceso)operativeSystem.getProcessList().get(i);
+            if (id == ((Proceso)operativeSystem.getProcessList().get(i)).getPcb().getId()){
+                process = (Proceso)operativeSystem.getProcessList().get(i);
+                break;
+            } else {
+                i++;
+            } 
+        }
+        return process;
     }
     
     public void buildTable(){

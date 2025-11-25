@@ -14,6 +14,8 @@ public class Proceso{
     private String updtMsg;
     private String file;
     private String directory;
+    private int createSize;
+    private boolean privacy;
 
 
     public Proceso(int id, String name, int crud, String file, String directory) {
@@ -23,6 +25,15 @@ public class Proceso{
         this.directory = directory;
     }
 
+    public Proceso(int id, String name, int crud, String file, String directory, int size, boolean privacy) {
+        this.pcb = new PCB(id, name);
+        this.crud = crud;
+        this.file = file;
+        this.directory = directory;
+        this.createSize = size;
+        this.privacy = privacy;
+    }
+    
     public Proceso(int id, String name, int crud, String file, String directory, String updtMsg) {
         this.pcb = new PCB(id, name);
         this.crud = crud;
@@ -68,4 +79,22 @@ public class Proceso{
         this.directory = directory;
     }
 
+    public int getSize() {
+        return createSize;
+    }
+
+    public void setSize(int createSize) {
+        this.createSize = createSize;
+    }
+
+    public boolean isPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(boolean privacy) {
+        this.privacy = privacy;
+    }
+
+    
+    
 }
