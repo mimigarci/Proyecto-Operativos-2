@@ -11,18 +11,35 @@ package EDD;
 public class Proceso{
     private PCB pcb;
     private int crud;
-    //private int fileId;
+    private String updtMsg;
+    private String file;
+    private String directory;
+    private int createSize;
+    private boolean privacy;
 
 
-    public Proceso(int id, String name, int crud) {
+    public Proceso(int id, String name, int crud, String file, String directory) {
         this.pcb = new PCB(id, name);
         this.crud = crud;
+        this.file = file;
+        this.directory = directory;
     }
 
-    public Proceso(PCB pcb, int crud) {
-        this.pcb = pcb;
+    public Proceso(int id, String name, int crud, String file, String directory, int size, boolean privacy) {
+        this.pcb = new PCB(id, name);
         this.crud = crud;
-        //this.fileId = 1000000000;
+        this.file = file;
+        this.directory = directory;
+        this.createSize = size;
+        this.privacy = privacy;
+    }
+    
+    public Proceso(int id, String name, int crud, String file, String directory, String updtMsg) {
+        this.pcb = new PCB(id, name);
+        this.crud = crud;
+        this.file = file;
+        this.updtMsg = updtMsg;
+        this.directory = directory;
     }
 
     public int getCrud() {
@@ -33,20 +50,51 @@ public class Proceso{
         this.crud = crud;
     }
 
-    /*
-    public int getFileId() {
-        return fileId;
+    
+    public String getFile() {
+        return file;
     }
 
-    public void setFileId(int fileId) {
-        this.fileId = fileId;
+    public void setFile(String file) {
+        this.file = file;
     }  
-    */
+    
     public PCB getPcb() {
         return pcb;
     }
 
-    // proceso.start() ----> Empieza a ejecutar el proceso. Este método hará que se ejecute el run() dentro de la clase
-    // ¿Cómo podemos simular la ejecución de un proceso? ¿Qué podemos meter en run?
+    public String getUpdtMsg() {
+        return updtMsg;
+    }
 
+    public void setUpdtMsg(String updtMsg) {
+        this.updtMsg = updtMsg;
+    }
+
+    public String getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(String directory) {
+        this.directory = directory;
+    }
+
+    public int getSize() {
+        return createSize;
+    }
+
+    public void setSize(int createSize) {
+        this.createSize = createSize;
+    }
+
+    public boolean isPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(boolean privacy) {
+        this.privacy = privacy;
+    }
+
+    
+    
 }

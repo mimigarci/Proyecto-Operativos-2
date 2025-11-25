@@ -91,49 +91,28 @@ public class Disk {
         }
     }
     
-    public void manageRequests(){
-        while (getRequests().getCount() > 0){
-            Request requestToAttend = null;
-            switch (getPlanification()) {
-            //FIFO
-                case 0:
-                    requestToAttend = getNextFifo();
+    public Request manageRequests(){
 
-            //SCAN
-                case 1:
-                    requestToAttend = getClosestScan();
-                    
-            //C-SCAN
-                case 2:
-                    requestToAttend = getClosestCscan();
-                    
-            //SSTF
-                case 3:
-                    requestToAttend = getClosestSsft();
-                    
-            }
-            if (requestToAttend == null) {
+        Request requestToAttend = null;
+        switch (getPlanification()) {
+        //FIFO
+            case 0:
+                requestToAttend = getNextFifo();
                 break;
-            }
-            switch (getPlanification()) {
-            //FIFO
-                case 0:
-                    requestToAttend = getNextFifo();
-
-            //SCAN
-                case 1:
-                    requestToAttend = getClosestScan();
-                    
-            //C-SCAN
-                case 2:
-                    requestToAttend = getClosestCscan();
-                    
-            //SSTF
-                case 3:
-                    requestToAttend = getClosestSsft();
-                    
-            }
+        //SCAN
+            case 1:
+                requestToAttend = getClosestScan();
+                break;
+        //C-SCAN
+            case 2:
+                requestToAttend = getClosestCscan();
+                break;
+        //SSTF
+            case 3:
+                requestToAttend = getClosestSsft();
+                break;
         }
+        return requestToAttend;
     }
     
     public Request getClosestSsft() {
@@ -141,7 +120,7 @@ public class Disk {
         int index = -1;
         int closest = 100;
         int current;
-        Request closestRequest = new Request(10000, 10000, 10000);
+        Request closestRequest = new Request(10000, "", 10000);
         Request currentRequest;
         while (i < getRequests().getCount()) {
             if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){
@@ -175,7 +154,7 @@ public class Disk {
         int index = -1;
         int closest = 100;
         int current;
-        Request closestRequest = new Request(10000, 10000, 10000);
+        Request closestRequest = new Request(10000, "", 10000);
         Request currentRequest;
         while (i < getRequests().getCount()) {
             if (getDirection() == 1) {
@@ -242,7 +221,7 @@ public class Disk {
         int closestFront = 100;
         int farthestBack = -1;
         int current;
-        Request closestRequest = new Request(10000, 10000, 10000);
+        Request closestRequest = new Request(10000, "", 10000);
         Request currentRequest;
         while (i < getRequests().getCount()) {
             if (getHeaderPosition() < ((Request) getRequests().get(i)).getFileAdd()){

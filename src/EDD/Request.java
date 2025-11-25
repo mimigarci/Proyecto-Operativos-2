@@ -10,17 +10,17 @@ package EDD;
  */
 public class Request {
     private int processId;
-    private int fileId;
+    private String fileId;
     private int fileAdd;
     private String updtMsg;
 
-    public Request(int processId, int fileId, int fileAdd) {
+    public Request(int processId, String fileId, int fileAdd) {
         this.processId = processId;
         this.fileId = fileId;
         this.fileAdd = fileAdd;
     }
 
-    public Request(int processId, int fileId, int fileAdd, String updtMsg) {
+    public Request(int processId, String fileId, int fileAdd, String updtMsg) {
         this.processId = processId;
         this.fileId = fileId;
         this.fileAdd = fileAdd;
@@ -35,11 +35,11 @@ public class Request {
         this.processId = processId;
     }
 
-    public int getFileId() {
+    public String getFile() {
         return fileId;
     }
 
-    public void setFileId(int fileId) {
+    public void setFile(String fileId) {
         this.fileId = fileId;
     }
 

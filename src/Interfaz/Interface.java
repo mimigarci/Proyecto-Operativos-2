@@ -13,6 +13,7 @@ import EDD.PCB;
 import EDD.Proceso;
 import EDD.OS;
 import EDD.QueueChangeListener;
+import EDD.Request;
 import java.awt.Choice;
 import java.awt.Color;
 import java.awt.Component;
@@ -53,12 +54,18 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class Interface extends javax.swing.JFrame {
 
-    private OS operativeSystem = new OS(4000, 4);
+    private OS operativeSystem = new OS();
     private Timer terminatedTimer, timeTimer;
     private int planification;
     private boolean isSchedulerActive = false;
     private Thread schedulerThread;
+    private Thread diskThread;
+    private boolean isDiskActive = false;
     private Disk disk = new Disk();
+    private Lista files = new Lista();
+    private String newNameAux = "";
+    private boolean privacyAux = true;
+    private int sizeAux = 0;
     private int actual_mode = 0; //0 ---> administrador, 1 ---> usuario
     
    // private Lista devices = operativeSystem.getDeviceTable();    //---> No creo que sea necesario, se accede directamente a lo que está dentro del sistema operativo
@@ -130,6 +137,7 @@ public class Interface extends javax.swing.JFrame {
         
         registerQueueListeners(); 
         startSchedulerThread();
+        startDiskThread();
     }
     
     private void registerQueueListeners() {
@@ -354,23 +362,10 @@ public class Interface extends javax.swing.JFrame {
     
     
     private void startSchedulerBackground() {
-        /*
-        int selected = planification; // read atomic/volatile if planification can change concurrently
-        //System.out.println(selected);
         if (operativeSystem.getReadyQueue().getCount() > 0) {
-            switch (selected) {
-                case 0 -> {
-                    operativeSystem.executeRoundRobin();
-                    //System.out.println("xddddddddddd");
-                }
-                case 1 -> operativeSystem.executePriorityPlanification();
-                case 2 -> operativeSystem.executeSPN();
-                case 3 -> operativeSystem.executeFeedback();
-                case 4 -> operativeSystem.executeFSS();
-                case 5 -> operativeSystem.executeSRT();
-            }
+            operativeSystem.getScheduler().manageProcess(operativeSystem.getReadyQueue(), operativeSystem.getBlockedQueue(), disk.getRequests(), files);
         }
-        */
+        
         // only after scheduler finishes, post minimal UI updates to EDT:
         javax.swing.SwingUtilities.invokeLater(() -> {
             // refresh all relevant lists with the correct queues
@@ -422,12 +417,64 @@ public class Interface extends javax.swing.JFrame {
         super.dispose();
     }
     
+    private void startDiskBackground() {
+        if (disk.getRequests().getCount() > 0) {
+            Request request = disk.manageRequests();
+            attendCrud(request);
+        }
+        
+        // only after scheduler finishes, post minimal UI updates to EDT:
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            // refresh all relevant lists with the correct queues
+            refreshReadyList(operativeSystem.getReadyQueue());
+            refreshBlockedList(operativeSystem.getBlockedQueue());
+            updateActualProcess();
+            updateTerminatedArea();
+        });
+    }
+    
+    private void startDiskThread() {
+        
+        if (diskThread != null && diskThread.isAlive()) return;
+        diskThread = new Thread(() -> {
+            // run until interrupted (dispose() will interrupt)
+            //System.out.println("ssss");
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    startDiskBackground();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+                // sleep between scheduler ticks, allow interruption to break early
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    // preserve interrupt status and exit loop
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }, "DiskThread");
+        diskThread.setDaemon(true);
+        diskThread.start();
+        isDiskActive = true;
+    }
     
     private Boolean sendProcess(){
         try {
             Lista aux = operativeSystem.getProcessList();
-            Proceso defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex());
+            Proceso defaultP;
+            switch (crud_selection.getSelectedIndex()) {
+                case 1:
+                    defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText(), newNameAux);
+                    break;
+                case 0:defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText(), sizeAux, privacyAux);
+                    break;
+                default:            
+                    defaultP = new Proceso(aux.count(), "CRUD Execution", crud_selection.getSelectedIndex(), file_name.getText(), file_directory.getText());
+                    break;
+            }
             aux.add(defaultP);
+            operativeSystem.getReadyQueue().enqueue(defaultP.getPcb());
             operativeSystem.setProcessList(aux);
             defaultP.getPcb().setStatus("ready");
             addPanelProceso(defaultP);
@@ -470,6 +517,31 @@ public class Interface extends javax.swing.JFrame {
                 }
             }
         }
+    }
+    
+    public void attendCrud(Request request){
+        
+        Proceso process = findProcessById(request.getProcessId());
+        
+        switch (process.getCrud()) {
+            case 0:
+                attendCreate(process);
+                break;
+            case 1:
+                attendUpdate(process);
+                break;
+            case 2:
+                attendDelete(process);
+                break;
+            case 3:
+                attendRead(process);
+                break;
+        }
+        
+        int index = operativeSystem.getBlockedQueue().getQueue().indexOf(process);
+        operativeSystem.getBlockedQueue().removeAt(index);
+        process.getPcb().setStatus("terminated");
+        operativeSystem.getTerminatedProcessList().add(process);
         updateTree();
         updateTable();
     }
@@ -508,28 +580,34 @@ public class Interface extends javax.swing.JFrame {
             }
 
             if (privacy != null){
-                
-                if (sendProcess() == true){
-                    File file = new File(allNodes.count()+1, file_name.getText(), size, privacy);
-
-                    if ((searchNodeByName(root, file_directory.getText())) != null){
-                        DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
-                        DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
-
-                        if (assignSpaceInDisk(size, file.getFileBlocks()) == true) {
-                            selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
-                            addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
-                            tree.insertNodeInto(child, father, father.getChildCount());
-                            show_terminated1.setText("Se ha creado el elmento exitosamente.");
-                        }// Llena la lista
-
-                    } else {
-                        show_terminated1.setText("El directorio no existe.");
-                    }
-                }
+                this.sizeAux = size;
+                this.privacyAux = privacy;
+                sendProcess();
             }
         } else {
             show_terminated1.setText("No se puede crear un elemento bajo ese nombre. Por favor escoja otro.");
+        }
+    }
+    
+    public void attendCreate(Proceso process){
+        
+        File file = new File(allNodes.count()+1, process.getFile(), process.getSize(), process.isPrivacy());
+                    
+        files.add(file);
+
+        if ((searchNodeByName(root, file_directory.getText())) != null){
+            DefaultMutableTreeNode father = searchNodeByName(root, file_directory.getText());
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(file); 
+
+            if (assignSpaceInDisk(process.getSize(), file.getFileBlocks()) == true) {
+                selectSpacesInTable(file.getFileBlocks()); //Asigna las posiciones en la tabla
+                addToTable(file.getFileBlocks(), file.getColor());   //Pinta dentro de la tabla
+                tree.insertNodeInto(child, father, father.getChildCount());
+                show_terminated1.setText("Se ha creado el elmento exitosamente.");
+            }// Llena la lista
+
+        } else {
+            show_terminated1.setText("El directorio no existe.");
         }
     }
     
@@ -540,10 +618,7 @@ public class Interface extends javax.swing.JFrame {
             DefaultMutableTreeNode parent = searchNodeByName(root, file_directory.getText());
 
             if (parent != null && child != null){
-                if (sendProcess() == true) {
-                    tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
-                    jTree1.updateUI(); // Refresh the tree display
-                }
+                sendProcess();
                 // Función de eliminar archivo/directorio del disco
             } else {
                 show_terminated1.setText("El archivo o el directorio referenciados no existen.");
@@ -555,23 +630,35 @@ public class Interface extends javax.swing.JFrame {
         }
     }
     
+    public void attendDelete(Proceso process){
+        
+        DefaultMutableTreeNode child = searchNodeByName(root, process.getFile());
+        DefaultMutableTreeNode parent = searchNodeByName(root, process.getDirectory());
+        
+        tree.removeNodeFromParent(child); //Esto elimina el nodo y sus hijos
+        jTree1.updateUI(); // Refresh the tree display
+    }
+    
     public void read(){
         if (searchNodeByName(root, file_name.getText()) != null && searchNodeByName(root, file_directory.getText()) != null){
-            File aux = (File) searchNodeByName(root, file_name.getText()).getUserObject();
-            
-            if (sendProcess() == true){
-                if (!aux.isIsPublic()){
-                    if (actual_mode == 0){
-                        show_terminated1.setText(aux.read());
-                    } else {
-                        show_terminated1.setText("No posee permisos para leer este archivo");
-                    }
-                } else {
-                    show_terminated1.setText(aux.read());
-                }
-            }
+                       
+            sendProcess();
         } else {
             show_terminated1.setText("No se encontró el archivo o el directorio referenciado.");
+        }
+    }
+    
+    public void attendRead(Proceso process){
+        
+        File aux = (File) searchNodeByName(root, process.getFile()).getUserObject();
+        if (!aux.isIsPublic()){
+            if (actual_mode == 0){
+                show_terminated1.setText(aux.read());
+            } else {
+                show_terminated1.setText("No posee permisos para leer este archivo");
+            }
+        } else {
+            show_terminated1.setText(aux.read());
         }
     }
     
@@ -594,23 +681,43 @@ public class Interface extends javax.swing.JFrame {
         }
 
         if (can_update == true){
-            if (sendProcess() == true){
-                file_name.getText();
-                file_directory.getText(); // Realmente este no es necesario pero bueno
-
-                DefaultMutableTreeNode node = searchNodeByName(root, file_name.getText());
-                if (node != null){
-                    // Cambio de nombre en disco
-                    if (node.getUserObject() instanceof File file) {
-                        file.setName(new_name);
-                        tree.nodeChanged(node);
-                    }
-                    show_terminated1.setText("Se ha actualizado el archivo.");
-                } else {
-                    show_terminated1.setText("No se encontró el archivo.");
-                }
-            }
+            this.newNameAux = new_name;
+            sendProcess();
         }
+    }
+    
+    public void attendUpdate(Proceso process) {
+        
+        
+        file_name.getText();
+        file_directory.getText(); // Realmente este no es necesario pero bueno
+
+        DefaultMutableTreeNode node = searchNodeByName(root, process.getFile());
+        if (node != null){
+            // Cambio de nombre en disco
+            if (node.getUserObject() instanceof File file) {
+                file.setName(process.getUpdtMsg());
+                tree.nodeChanged(node);
+            }
+            show_terminated1.setText("Se ha actualizado el archivo.");
+        } else {
+            show_terminated1.setText("No se encontró el archivo.");
+        }
+    }
+    
+    public Proceso findProcessById (int id) {
+        int i = 0;
+        Proceso process = null;
+        while (i < operativeSystem.getProcessList().count()){
+            process = (Proceso)operativeSystem.getProcessList().get(i);
+            if (id == ((Proceso)operativeSystem.getProcessList().get(i)).getPcb().getId()){
+                process = (Proceso)operativeSystem.getProcessList().get(i);
+                break;
+            } else {
+                i++;
+            } 
+        }
+        return process;
     }
     
     public void buildTable(){
@@ -669,11 +776,15 @@ public class Interface extends javax.swing.JFrame {
     
     private void buildTree(){
         File main_dir = new File(allNodes.count()+1, "Archivos", true);
+        files.add(main_dir);
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); 
         
         for (int i = 1; i <= 10; i++) {
             File dir = new File(allNodes.count()+1, "Proyecto_" + i, true);
             File file = new File(allNodes.count()+2, "main_" + i, 4, true); // Size 4 to fit 10 files (40 blocks) in 64
+            
+            files.add(dir);
+            files.add(file);
             
             assignSpaceInDisk(file.getSize(), file.getFileBlocks()); 
             selectSpacesInTable(file.getFileBlocks()); 
@@ -681,7 +792,7 @@ public class Interface extends javax.swing.JFrame {
             
             DefaultMutableTreeNode dirNode = new DefaultMutableTreeNode(dir);
             DefaultMutableTreeNode fileNode = new DefaultMutableTreeNode(file);
-            
+                        
             dirNode.add(fileNode);
             newRoot.add(dirNode);
         }
@@ -698,6 +809,8 @@ public class Interface extends javax.swing.JFrame {
     private void buildTreeEmpty(){
         File main_dir = new File(allNodes.count()+1, "Archivos", true);
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); 
+        
+        files.add(main_dir);
         
         root = newRoot;
         DefaultTreeModel model = new DefaultTreeModel(root);
@@ -752,8 +865,7 @@ public class Interface extends javax.swing.JFrame {
             findNodes(child, lista);
         }
     }
-
-    
+ 
     private void updateTable(){
         allNodes = getAllNodes(root);
         String txt = ""; 
