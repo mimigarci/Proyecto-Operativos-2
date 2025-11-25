@@ -418,7 +418,7 @@ public class Interface extends javax.swing.JFrame {
     }
     
     private void startDiskBackground() {
-        if (operativeSystem.getReadyQueue().getCount() > 0) {
+        if (disk.getRequests().getCount() > 0) {
             Request request = disk.manageRequests();
             attendCrud(request);
         }
@@ -517,8 +517,6 @@ public class Interface extends javax.swing.JFrame {
                 }
             }
         }
-        updateTree();
-        updateTable();
     }
     
     public void attendCrud(Request request){
@@ -540,10 +538,12 @@ public class Interface extends javax.swing.JFrame {
                 break;
         }
         
-        operativeSystem.getBlockedQueue().removeValue(process);
+        int index = operativeSystem.getBlockedQueue().getQueue().indexOf(process);
+        operativeSystem.getBlockedQueue().removeAt(index);
         process.getPcb().setStatus("terminated");
         operativeSystem.getTerminatedProcessList().add(process);
-        
+        updateTree();
+        updateTable();
     }
     
     public void create(){
