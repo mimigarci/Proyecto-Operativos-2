@@ -17,6 +17,7 @@ public class File {
     private Lista fileBlocks = new Lista();
     private boolean isPublic;
     private Color color;
+    private boolean isFile;
 
     public File(int id, String name, int size, boolean isPublic) {
         this.id = id;
@@ -24,6 +25,14 @@ public class File {
         this.size = size;
         this.isPublic = isPublic;
         this.color = selectColors();
+        this.isFile = true;
+    }
+
+    public File(int id, String name, boolean isPublic) {
+        this.name = name;
+        this.id = id;
+        this.isPublic = isPublic;
+        this.isFile = false;
     }
     
     public Color selectColors(){

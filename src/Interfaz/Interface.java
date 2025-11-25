@@ -6,7 +6,6 @@ package Interfaz;
 
 import EDD.Block;
 import EDD.Cola;
-import EDD.Directory;
 import EDD.Disk;
 import EDD.File;
 import EDD.Lista;
@@ -642,12 +641,12 @@ public class Interface extends javax.swing.JFrame {
     }
     
     private void buildTree(){
-        Directory main_dir = new Directory("Archivos");
+        File main_dir = new File(allNodes.count()+1, "Archivos", true);
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); 
         
         for (int i = 1; i <= 10; i++) {
-            Directory dir = new Directory("Proyecto_" + i);
-            File file = new File(i - 1, "main_" + i, 4, true); // Size 4 to fit 10 files (40 blocks) in 64
+            File dir = new File(allNodes.count()+1, "Proyecto_" + i, true);
+            File file = new File(allNodes.count()+2, "main_" + i, 4, true); // Size 4 to fit 10 files (40 blocks) in 64
             
             assignSpaceInDisk(file.getSize(), file.getFileBlocks()); 
             selectSpacesInTable(file.getFileBlocks()); 
@@ -670,7 +669,7 @@ public class Interface extends javax.swing.JFrame {
     }
     
     private void buildTreeEmpty(){
-        Directory main_dir = new Directory("Archivos");
+        File main_dir = new File(allNodes.count()+1, "Archivos", true);
         DefaultMutableTreeNode newRoot = new DefaultMutableTreeNode(main_dir); 
         
         root = newRoot;
