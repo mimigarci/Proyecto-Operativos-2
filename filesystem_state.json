@@ -1,0 +1,401 @@
+{
+  "diskBlocks" : [ {
+    "content" : "Empty",
+    "position" : 0,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 1,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 2,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 3,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 4,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 5,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 6,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 7,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 8,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 9,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 10,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 11,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 12,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 13,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 14,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 15,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 16,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 17,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 18,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 19,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 20,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 21,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 22,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 23,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 24,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 25,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 26,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 27,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 28,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 29,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 30,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 31,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 32,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 33,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 34,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 35,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 36,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 37,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 38,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 39,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 40,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 41,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 42,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 43,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 44,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 45,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 46,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 47,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 48,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 49,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 50,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 51,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 52,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 53,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 54,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 55,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 56,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 57,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 58,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 59,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 60,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 61,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 62,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 63,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  } ],
+  "rootNode" : {
+    "isFileObject" : true,
+    "fileData" : {
+      "id" : 1,
+      "name" : "Archivos",
+      "size" : 0,
+      "isPublic" : true,
+      "colorRGB" : null,
+      "isFile" : false,
+      "blockIndices" : [ ]
+    },
+    "stringData" : null,
+    "children" : [ ]
+  }
+}
