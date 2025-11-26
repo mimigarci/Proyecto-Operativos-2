@@ -1,244 +1,244 @@
 {
   "diskBlocks" : [ {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 0,
     "x" : 0,
     "y" : 0,
-    "colorRGB" : "19,205,30"
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 1,
     "x" : 0,
-    "y" : 1,
-    "colorRGB" : "19,205,30"
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 2,
     "x" : 0,
-    "y" : 2,
-    "colorRGB" : "19,205,30"
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 3,
     "x" : 0,
-    "y" : 3,
-    "colorRGB" : "19,205,30"
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 4,
     "x" : 0,
-    "y" : 4,
-    "colorRGB" : "43,223,161"
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 5,
     "x" : 0,
-    "y" : 5,
-    "colorRGB" : "43,223,161"
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 6,
     "x" : 0,
-    "y" : 6,
-    "colorRGB" : "43,223,161"
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 7,
     "x" : 0,
-    "y" : 7,
-    "colorRGB" : "43,223,161"
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 8,
-    "x" : 1,
+    "x" : 0,
     "y" : 0,
-    "colorRGB" : "179,15,226"
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 9,
-    "x" : 1,
-    "y" : 1,
-    "colorRGB" : "179,15,226"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 10,
-    "x" : 1,
-    "y" : 2,
-    "colorRGB" : "179,15,226"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 11,
-    "x" : 1,
-    "y" : 3,
-    "colorRGB" : "179,15,226"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 12,
-    "x" : 1,
-    "y" : 4,
-    "colorRGB" : "54,212,11"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 13,
-    "x" : 1,
-    "y" : 5,
-    "colorRGB" : "54,212,11"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 14,
-    "x" : 1,
-    "y" : 6,
-    "colorRGB" : "54,212,11"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 15,
-    "x" : 1,
-    "y" : 7,
-    "colorRGB" : "54,212,11"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 16,
-    "x" : 2,
+    "x" : 0,
     "y" : 0,
-    "colorRGB" : "96,204,237"
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 17,
-    "x" : 2,
-    "y" : 1,
-    "colorRGB" : "96,204,237"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 18,
-    "x" : 2,
-    "y" : 2,
-    "colorRGB" : "96,204,237"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 19,
-    "x" : 2,
-    "y" : 3,
-    "colorRGB" : "96,204,237"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 20,
-    "x" : 2,
-    "y" : 4,
-    "colorRGB" : "70,174,67"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 21,
-    "x" : 2,
-    "y" : 5,
-    "colorRGB" : "70,174,67"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 22,
-    "x" : 2,
-    "y" : 6,
-    "colorRGB" : "70,174,67"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 23,
-    "x" : 2,
-    "y" : 7,
-    "colorRGB" : "70,174,67"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 24,
-    "x" : 3,
+    "x" : 0,
     "y" : 0,
-    "colorRGB" : "162,120,252"
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 25,
-    "x" : 3,
-    "y" : 1,
-    "colorRGB" : "162,120,252"
-  }, {
-    "content" : "Occupied",
-    "position" : 26,
-    "x" : 3,
-    "y" : 2,
-    "colorRGB" : "162,120,252"
-  }, {
-    "content" : "Occupied",
-    "position" : 27,
-    "x" : 3,
-    "y" : 3,
-    "colorRGB" : "162,120,252"
-  }, {
-    "content" : "Occupied",
-    "position" : 28,
-    "x" : 3,
-    "y" : 4,
-    "colorRGB" : "194,150,124"
-  }, {
-    "content" : "Occupied",
-    "position" : 29,
-    "x" : 3,
-    "y" : 5,
-    "colorRGB" : "194,150,124"
-  }, {
-    "content" : "Occupied",
-    "position" : 30,
-    "x" : 3,
-    "y" : 6,
-    "colorRGB" : "194,150,124"
-  }, {
-    "content" : "Occupied",
-    "position" : 31,
-    "x" : 3,
-    "y" : 7,
-    "colorRGB" : "194,150,124"
-  }, {
-    "content" : "Occupied",
-    "position" : 32,
-    "x" : 4,
+    "x" : 0,
     "y" : 0,
-    "colorRGB" : "249,115,186"
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
+    "position" : 26,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 27,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 28,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 29,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 30,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 31,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
+    "position" : 32,
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
+  }, {
+    "content" : "Empty",
     "position" : 33,
-    "x" : 4,
-    "y" : 1,
-    "colorRGB" : "249,115,186"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 34,
-    "x" : 4,
-    "y" : 2,
-    "colorRGB" : "249,115,186"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 35,
-    "x" : 4,
-    "y" : 3,
-    "colorRGB" : "249,115,186"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 36,
-    "x" : 4,
-    "y" : 4,
-    "colorRGB" : "105,18,150"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 37,
-    "x" : 4,
-    "y" : 5,
-    "colorRGB" : "105,18,150"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 38,
-    "x" : 4,
-    "y" : 6,
-    "colorRGB" : "105,18,150"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
-    "content" : "Occupied",
+    "content" : "Empty",
     "position" : 39,
-    "x" : 4,
-    "y" : 7,
-    "colorRGB" : "105,18,150"
+    "x" : 0,
+    "y" : 0,
+    "colorRGB" : "255,255,255"
   }, {
     "content" : "Empty",
     "position" : 40,
@@ -387,7 +387,7 @@
   "rootNode" : {
     "isFileObject" : true,
     "fileData" : {
-      "id" : 0,
+      "id" : 1,
       "name" : "Archivos",
       "size" : 0,
       "isPublic" : true,
@@ -396,266 +396,6 @@
       "blockIndices" : [ ]
     },
     "stringData" : null,
-    "children" : [ {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 2,
-        "name" : "Proyecto_1",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "21,138,191",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 12,
-          "name" : "main_1",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "19,205,30",
-          "isFile" : true,
-          "blockIndices" : [ 0, 1, 2, 3 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 3,
-        "name" : "Proyecto_2",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "124,102,45",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 13,
-          "name" : "main_2",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "43,223,161",
-          "isFile" : true,
-          "blockIndices" : [ 4, 5, 6, 7 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 4,
-        "name" : "Proyecto_3",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "31,24,57",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 14,
-          "name" : "main_3",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "179,15,226",
-          "isFile" : true,
-          "blockIndices" : [ 8, 9, 10, 11 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 5,
-        "name" : "Proyecto_4",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "17,211,29",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 15,
-          "name" : "main_4",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "54,212,11",
-          "isFile" : true,
-          "blockIndices" : [ 12, 13, 14, 15 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 6,
-        "name" : "Proyecto_5",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "94,175,31",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 16,
-          "name" : "main_5",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "96,204,237",
-          "isFile" : true,
-          "blockIndices" : [ 16, 17, 18, 19 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 7,
-        "name" : "Proyecto_6",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "88,124,104",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 17,
-          "name" : "main_6",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "70,174,67",
-          "isFile" : true,
-          "blockIndices" : [ 20, 21, 22, 23 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 8,
-        "name" : "Proyecto_7",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "176,135,139",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 18,
-          "name" : "main_7",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "162,120,252",
-          "isFile" : true,
-          "blockIndices" : [ 24, 25, 26, 27 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 9,
-        "name" : "Proyecto_8",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "100,82,54",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 19,
-          "name" : "main_8",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "194,150,124",
-          "isFile" : true,
-          "blockIndices" : [ 28, 29, 30, 31 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 10,
-        "name" : "Proyecto_9",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "153,145,221",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 20,
-          "name" : "main_9",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "249,115,186",
-          "isFile" : true,
-          "blockIndices" : [ 32, 33, 34, 35 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    }, {
-      "isFileObject" : true,
-      "fileData" : {
-        "id" : 11,
-        "name" : "Proyecto_10",
-        "size" : 0,
-        "isPublic" : true,
-        "colorRGB" : "24,135,46",
-        "isFile" : false,
-        "blockIndices" : [ ]
-      },
-      "stringData" : null,
-      "children" : [ {
-        "isFileObject" : true,
-        "fileData" : {
-          "id" : 21,
-          "name" : "main_10",
-          "size" : 4,
-          "isPublic" : true,
-          "colorRGB" : "105,18,150",
-          "isFile" : true,
-          "blockIndices" : [ 36, 37, 38, 39 ]
-        },
-        "stringData" : null,
-        "children" : [ ]
-      } ]
-    } ]
+    "children" : [ ]
   }
 }

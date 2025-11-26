@@ -584,9 +584,7 @@ public class Interface extends javax.swing.JFrame {
                 }
             }
             case "Leer" -> {
-                if (sendProcess() == true){
-                    read();
-                }
+                read();
             }
         }
         
